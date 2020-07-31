@@ -5,7 +5,7 @@ import './header.css';
 function Header(){
   return (
 
-  <h2 className="Header-logo"> Welcome to BluffMaster</h2>
+  <h2> Welcome to BluffMaster</h2>
 
   )
 
