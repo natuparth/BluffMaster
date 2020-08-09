@@ -12,8 +12,8 @@
 
 .playingCards .card {
     display: inline-block;
-    width: 3.3em;
-    height: 4.6em;
+    width: 3.0em;
+    height: 3.8em;
     border: 1px solid #666;
     border-radius: .3em;
     -moz-border-radius: .3em;
@@ -478,7 +478,7 @@
 
 .playingCards ul.hand,
 .playingCards ul.deck {
-    height: 8em;
+    height: 6em;
 }
 .playingCards ul.hand li,
 .playingCards ul.deck li {

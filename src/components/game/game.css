@@ -1,7 +1,72 @@
 .Game_container{
-    padding : 2%;
-    width:100% ;
-    height: 500px;
-    background-color: bisque;
-  
+  padding : 2%;
+  width:100% ;
+ height: 550px; 
+    background-color: rgb(240, 235, 235);
+    display: grid;
+    border: 2px solid red;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    grid-gap: 10px;
+    grid-template-rows: 22% 22% 22% 34%;
   }
+ 
+   .player_1{
+    grid-column-start: 2;
+    grid-column-end: 5;
+    grid-row-start: row3-start;
+    grid-row-end: 4;
+    background-color: rgb(184, 212, 184);
+   }
+   .player_8{
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 3;
+    grid-row-end: span 1;
+    background-color: rgb(184, 212, 184);
+    justify-content: start;
+   }
+   .player_7{
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: span 1;
+    background-color: rgb(184, 212, 184);
+    justify-content: center;   
+}
+   .player_6{
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+    background-color: rgb(184, 212, 184);
+    justify-content: center;
+   }
+   .player_5{
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+    background-color: rgb(184, 212, 184);
+    justify-content: center;
+  }
+   .player_4{
+    grid-column-start: 4;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+    background-color: rgb(184, 212, 184);
+   }
+   .player_3{
+    grid-column-start: 5;
+    grid-column-end: span 1;
+    grid-row-start: 2;
+    grid-row-end: span 1;
+    background-color: rgb(184, 212, 184);
+   }
+   .player_2{
+    grid-column-start: 5;
+    grid-column-end: span 1;
+    grid-row-start: 3;
+    grid-row-end: span 1;
+    background-color: rgb(184, 212, 184);
+   }
