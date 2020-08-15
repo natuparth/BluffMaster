@@ -1,4 +1,5 @@
 import React from "react";
+
 import "./game.css";
 import "../../selfthinker-CSS-Playing-Cards-7e0e0f2/cards.css";
 
@@ -9,8 +10,11 @@ export default class Game extends React.Component {
   classMapping = [];
   cardComponent;
   players = [];
+  
+
   constructor(props) {
     super(props);
+    
      this.classMapping = this.getClassMapping(+this.props.numberOfPlayers);
     // this.playerMapping = this.playerMapping();
     this.players = props.players;
@@ -50,12 +54,15 @@ export default class Game extends React.Component {
     }
 
     return (
+    <div>
+  
  <div className="Game_container">
     {this.cardComponent}
     <div className="player_1">
      <div className="playingCards fourColours faceImages">
           <ul className="hand">{items}</ul>
         </div> 
+      </div>
       </div>
       </div>
     );
