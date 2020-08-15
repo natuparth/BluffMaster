@@ -3,7 +3,9 @@ import firebase from "../../Firebase";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { isHost, hostActions, gameActions } from "../../gameStore/gameSlices";
+import './createGame.css';
 
+const functions = require('firebase-functions');
 const db = firebase.firestore();
 const ranks = {
   1: "A",
@@ -34,18 +36,20 @@ export default function CreateGame() {
   const [numberOfPlayers, setNumberOfPlayers] = useState(5);
 
   return (
-    <div className="Main_container">
+    <div className='Game_container1'>
       <Players />
+      <div className='game_properties_container'>
       <NumberOfDecks />
       <NumberOfLifeLines />
       <button onClick={()=>startGameHandler(numberOfDecks,numberOfPlayers)} disabled={isPlayerHost}>
         Start Game
       </button>
+      </div>
     </div>
   );
   function Players() {
     return (
-      <div>
+      <div className='player_container'>
         <ul>
           <li>
             <h1>Player 1</h1>
@@ -147,8 +151,9 @@ for(i=1;i<=players;i++)
   return PlayerData;
 };
 
-db.collection('games').doc('myGame').onSnapshot(function(data){
-  console.log(data.data());
-})
+// db.collection('games').doc('myGame').onSnapshot(function(data){
+//   console.log(data.data());
+// })
+
 
 

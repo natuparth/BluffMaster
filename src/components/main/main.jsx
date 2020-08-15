@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import firebase from '../../Firebase';
 import { useHistory } from 'react-router-dom';
 import { useSelect, useDispatch } from 'react-redux';
-import { hostActions, gameActions } from '../../gameStore/gameSlices';
+import { hostActions, gameActions, AddPlayerAsync } from '../../gameStore/gameSlices';
 import './main.css';
 
 const db = firebase.firestore();
@@ -12,21 +12,25 @@ function Main(){
     const dispatch = useDispatch();
     
     function createGameHandler(gameName){
-        dispatch(gameActions.setGameName({name: gameName}));
-        dispatch(hostActions.setHost(true));
+    //    dispatch(gameActions.setGameName({name: gameName}));
+      //  dispatch(hostActions.setHost(true));
         let r = Math.random().toString(36).substring(7);
         console.log(r);
-        db.collection('games').doc(gameName).set({
-           gameKey: r,
-           Player1: {
-               cards: [],
-               name: 'parth'
-           }
-       }).then((doc)=>{
+    //     db.collection('games').doc(gameName).set({
+    //        gameKey: r,
+    //        Player1: {
+    //            cards: [],
+    //            name: 'parth'
+    //        }
+    //    }).then((doc)=>{
            
-           history.push("/startgame");
-           console.log(doc)
-       });
+    //        history.push("/startgame");
+    //        console.log(doc)
+    //    });
+    dispatch(AddPlayerAsync({
+        gameName: 'newlycreated'
+    }))
+    history.push("/startgame");
         
     }
   

@@ -1,6 +1,4 @@
 import React from 'react';
-import { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux';
 import {
  selectCard,
  gameActions
@@ -10,8 +8,7 @@ import './header.css';
 
 
 function Header(){
-  const count = useSelector(selectCard);
-  const dispatch = useDispatch();
+ 
   const card = {
     suit: '1',
     rank : 'J'
