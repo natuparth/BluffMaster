@@ -1,4 +1,5 @@
 import React from 'react';
+import store from '../../gameStore/gameStore';
 import Header from '../header/Header';
 import './App.css';
 import Main from '../main/main';
@@ -6,6 +7,21 @@ import CreateGame from '../createGame/createGame';
 import Game from '../game/game';
 import HostGame from '../hostGame/hostGame';
 import { Switch, Route } from 'react-router-dom';
+import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
+import { createFirestoreInstance } from 'redux-firestore';
+import firebase from '../../Firebase';
+
+const rrfConfig = { userProfile: 'users' } // react-redux-firebase config
+
+// Initialize firebase instance
+
+const rrfProps = {
+  firebase,
+  config: rrfConfig,
+  dispatch: store.dispatch,
+   createFirestoreInstance // <- needed if using firestore
+}
+
 
 export default class App extends React.Component {
   players = ["one","two","three","four"];
@@ -18,7 +34,8 @@ export default class App extends React.Component {
  render(){
 
   return (
-    
+     <ReactReduxFirebaseProvider {...rrfProps}>
+          
     <div className="App App-header">
      {/* <input type="text" value={this.state.Value} onChange={this.handleChange}/> */}
       <Header/>
@@ -29,7 +46,9 @@ export default class App extends React.Component {
   {/* {  <CreateGame/> } */}
     {/* <Game numberOfPlayers={this.state.value} players={this.players}/> */}
     </Switch>
+
     </div>
+    </ReactReduxFirebaseProvider>
 
   );
   }

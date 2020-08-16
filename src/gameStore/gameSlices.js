@@ -1,21 +1,23 @@
 import {createSlice, combineReducers} from '@reduxjs/toolkit';
-
+import { push } from 'connected-react-router';
 
 export const gameSlice = createSlice({
 name : 'game',
 initialState: {
-    index: 0,
-    mycards: [],
-    gameName: ' ',
-    gameCards: []
+    gameName: '',
+    gameCards: [],
+    gameKey: '',
+    gameId: ''
 
 },
 reducers : {
     addcard: (state,action) => {
          state.mycards.push(action.payload.cards);
     },
-    setGameName: (state, action) => {
-        state.gameName = action.payload.name;
+    setGameData: (state, action) => {
+        state.gameName = action.payload.gameName;
+        state.gameKey = action.payload.gameKey;
+        state.gameId = action.payload.gameId;
     }
 }
  
@@ -62,7 +64,8 @@ export const playerActions = playerSlice.actions;
 export const playerReducer = playerSlice.reducers;
 
 export const isHost = state => state.host.isHost;
-export const selectCard = state => state.game.index;
+export const gameId = state => state.game.gameId;
+
 export const getPlayers = state => state.players.players;
 
 export const hostSliceReducer = hostSlice.reducer;
@@ -72,21 +75,28 @@ export const playerSliceReducer = playerSlice.reducer;
 export const AddPlayerAsync = gameData => (dispatch, getState, {getFirebase, getFirestore}) => {
  
   const game = {
-    name: gameData.gamename,
+    gameName: gameData.gameName,
+    gameKey: gameData.gameKey,
     Players:[
-    {
+    {   pname: 'parth',
         cards:[],
         lifelines:4
     }
     ]
   }
     const firestore = getFirestore();
-  firestore.collection('games').add({
-      gameData
-  }
-  ).then(()=>{
-      dispatch()
+  firestore.collection('games').add(game).then((doc)=>{
+      dispatch(gameActions.setGameData({
+          gameId: doc.id, 
+          gameName: game.gameName,
+          gameKey: game.gameKey
+      }));
+      dispatch(playerActions.addPlayer(
+         game.Players[0]
+      ))
       console.log('game added');
+      console.log(firestore)
+      dispatch(push('/startgame',{gameId: doc.id}))
      
   })
 

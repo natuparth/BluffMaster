@@ -1,18 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import store from './gameStore/gameStore';
+import store ,{history} from './gameStore/gameStore';
 import {Provider} from 'react-redux';
 import './index.css';
 import App from '../src/components/app/App';
 import * as serviceWorker from './serviceWorker';
-import { BrowserRouter } from 'react-router-dom';
+import { ConnectedRouter } from 'connected-react-router';
+
+
+
+
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-    <BrowserRouter>  
+    <ConnectedRouter history={history}>  
     <App />
-    </BrowserRouter>
+    </ConnectedRouter>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

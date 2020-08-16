@@ -2,24 +2,28 @@
 import {configureStore} from '@reduxjs/toolkit';
 import {hostSliceReducer, gameSliceReducer, playerSliceReducer} from './gameSlices';
 import  thunkMiddleWare  from 'redux-thunk';
+import { createBrowserHistory } from 'history'
+import { connectRouter, routerMiddleware } from 'connected-react-router'
+import 'firebase/firestore';
 import { reduxFirestore, getFirestore } from 'redux-firestore';
-import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
+import { reactReduxFirebase, getFirebase, firebaseReducer, ReactReduxFirebaseProvider } from 'react-redux-firebase';
+import { firestoreReducer } from 'redux-firestore';
 import fbConfig from '../Firebase';
-//const thunkMiddleware = require('redux-thunk');
 
-//const enhancers= [thunkMiddleWare.withExtraArgument({ getFireStore, getFirebase}), reduxFirestore(fbConfig),reactReduxFirebase(fbConfig)]
-
-
+export const history = createBrowserHistory();
 export default configureStore({
     reducer: {
       game: gameSliceReducer,
       host: hostSliceReducer,
-      player: playerSliceReducer
+      player: playerSliceReducer,
+      firebase: firebaseReducer,
+      firestore: firestoreReducer,
+      router: connectRouter(history)
     },
     
-    middleware: [thunkMiddleWare.withExtraArgument({ getFirestore, getFirebase})],
+    middleware: [thunkMiddleWare.withExtraArgument({ getFirestore}), routerMiddleware(history)],
 
-    enhancers:[reduxFirestore(fbConfig),reactReduxFirebase(fbConfig)],
+ enhancers:[reduxFirestore(fbConfig)],
     devTools: process.env.NODE_ENV !== 'production'
   });
 

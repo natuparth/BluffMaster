@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import firebase from '../../Firebase';
+import { browserHistory } from 'react-router';
 import { useHistory } from 'react-router-dom';
 import { useSelect, useDispatch } from 'react-redux';
 import { hostActions, gameActions, AddPlayerAsync } from '../../gameStore/gameSlices';
@@ -16,21 +17,11 @@ function Main(){
       //  dispatch(hostActions.setHost(true));
         let r = Math.random().toString(36).substring(7);
         console.log(r);
-    //     db.collection('games').doc(gameName).set({
-    //        gameKey: r,
-    //        Player1: {
-    //            cards: [],
-    //            name: 'parth'
-    //        }
-    //    }).then((doc)=>{
-           
-    //        history.push("/startgame");
-    //        console.log(doc)
-    //    });
     dispatch(AddPlayerAsync({
-        gameName: 'newlycreated'
+        gameName: gameName,
+        gameKey: r
     }))
-    history.push("/startgame");
+   // browserHistory.push("/startgame");
         
     }
   

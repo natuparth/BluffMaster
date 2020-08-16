@@ -1,8 +1,10 @@
 import React from "react";
 import firebase from "../../Firebase";
 import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { isHost, hostActions, gameActions } from "../../gameStore/gameSlices";
+import { useSelector, useDispatch, connect } from "react-redux";
+import { isHost, hostActions, gameActions, gameId } from "../../gameStore/gameSlices";
+import { firestoreConnect, useFirestoreConnect } from 'react-redux-firebase';
+import { compose } from 'redux';
 import './createGame.css';
 
 const functions = require('firebase-functions');
@@ -29,15 +31,21 @@ const suits = {
   3: "hearts",
   0: "clubs",
 };
-export default function CreateGame() {
+ function CreateGame({gameName, playersArray}) {
+  const gameIdF = useSelector(gameId); 
+  console.log('dunction called');
   const isPlayerHost = useSelector(isHost);
   const [numberOfDecks, setNumberOfDecks] = useState(1);
   const [numberOfLifeLines, setNumberOfLifeLines] = useState(3);
   const [numberOfPlayers, setNumberOfPlayers] = useState(5);
-
+  var elem;
+ // if(playersArray)
+ // if (playersArray.length> 0) 
+   //     elem = 
+  console.log(playersArray);
   return (
     <div className='Game_container1'>
-      <Players />
+     <Players players={playersArray}/>
       <div className='game_properties_container'>
       <NumberOfDecks />
       <NumberOfLifeLines />
@@ -47,13 +55,21 @@ export default function CreateGame() {
       </div>
     </div>
   );
-  function Players() {
+  function Players(props) { 
+    console.log(props)
+   var elem = [];
+   var i ;
+   if(props.players &&props.players.length >0){
+   for(i=0;i<props.players.length;i++){
+     //console.log(players[i].pname);
+    elem.push(<li key={props.players[i].pname}><h1>{props.players[i].pname}</h1></li>);
+   }
+  }
+    console.log(elem);
     return (
       <div className='player_container'>
         <ul>
-          <li>
-            <h1>Player 1</h1>
-          </li>
+         {elem}
         </ul>
       </div>
     );
@@ -63,7 +79,7 @@ export default function CreateGame() {
     var elem = [];
     var i = 0;
     for (i = 1; i < 5; i++) {
-      var item = <option value={i}>{i}</option>;
+      var item = <option key={i}  value={i}>{i}</option>;
       elem.push(item);
     }
     return (
@@ -84,7 +100,7 @@ export default function CreateGame() {
     var elem = [];
     var i = 0;
     for (i = 2; i < 7; i++) {
-      var item = <option value={i}>{i}</option>;
+      var item = <option key={i} value={i}>{i}</option>;
       elem.push(item);
     }
     return (
@@ -150,6 +166,36 @@ for(i=1;i<=players;i++)
 
   return PlayerData;
 };
+
+const mapStateToProps = (state) => {
+ if(state.firestore.data.games)
+ {
+   console.log(state);
+  console.log(state.firestore.data.games[state.game.gameId].Players);
+ }
+  return ({
+    gameName: state.game.gameName,
+    playersArray: state.firestore.data.games ? state.firestore.data.games[state.game.gameId].Players: null 
+    }
+  )
+
+}
+
+export default compose(
+  firestoreConnect((props) =>{ 
+  console.log('came inside compose');
+    return [
+        {
+         collection: 'games',
+         doc: props.location.state.gameId
+        }
+ ]
+}
+ ),
+  connect(mapStateToProps)
+
+)(CreateGame);
+
 
 // db.collection('games').doc('myGame').onSnapshot(function(data){
 //   console.log(data.data());
