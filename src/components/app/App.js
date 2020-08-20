@@ -37,16 +37,14 @@ export default class App extends React.Component {
      <ReactReduxFirebaseProvider {...rrfProps}>
           
     <div className="App App-header">
-     {/* <input type="text" value={this.state.Value} onChange={this.handleChange}/> */}
       <Header/>
+    <div style={ {width:"100%"} }>  
       <Switch>
       <Route exact path="/" component={Main}/>
       <Route path="/startgame" component={CreateGame}/>
       <Route path="/game" component= {Game}/>
-  {/* {  <CreateGame/> } */}
-    {/* <Game numberOfPlayers={this.state.value} players={this.players}/> */}
     </Switch>
-
+    </div>
     </div>
     </ReactReduxFirebaseProvider>
 

@@ -1,9 +1,11 @@
 import React from "react";
-
+import { connect } from "react-redux";
+import { firestoreConnect } from 'react-redux-firebase';
+import { compose } from 'redux';
 import "./game.css";
 import "../../selfthinker-CSS-Playing-Cards-7e0e0f2/cards.css";
 
-export default class Game extends React.Component {
+class Game extends React.Component {
   cardArray = [];
   numberOfPlayers;
   playerId;
@@ -14,32 +16,26 @@ export default class Game extends React.Component {
 
   constructor(props) {
     super(props);
-    
-     this.classMapping = this.getClassMapping(+this.props.numberOfPlayers);
-    // this.playerMapping = this.playerMapping();
-    this.players = props.players;
-     this.cardComponent = this.getMultiPlayerCardsLayout(this.props.numberOfPlayers); 
-     var cards = this.DistributeCards(1);
-     this.cardArray = cards.map((num) => {
-      var suitOfCard = this.suits[~~((num - 1) / 13)];
-      var rankOfCard = this.ranks[num % 13];
-      return { suit: suitOfCard, rank: rankOfCard };
-    });
+     console.log(props);
+    this.classMapping = this.getClassMapping(+this.props.playersArray.length);
+
+    this.players = props.playersArray.map((doc)=> doc.pname);
+    this.cardComponent = this.getMultiPlayerCardsLayout(this.props.playersArray.length); 
+    var playerObj = this.props.playersArray.filter(element => element.pid === this.props.playerId)[0]
+
+    this.cardArray = Array.from(playerObj.cards);
+   
   }
 
   componentWillReceiveProps(prop) {
    
   }
 
-
-
   render() {
     const items = [];
     var i = 0;
-    for (const obj of this.cardArray) {
-        if(i>16)
-         break;
-         i=i+1;
+    for(i=0;i< this.cardArray.length;i++){
+      var obj = this.cardArray[i];
       var cardClass = "card rank-" + obj.rank + " " + obj.suit;
       var elem = this.getSuitSymbol(obj.suit);
 
@@ -52,6 +48,7 @@ export default class Game extends React.Component {
         </li>
       );
     }
+    
 
     return (
     <div>
@@ -65,6 +62,7 @@ export default class Game extends React.Component {
       </div>
       </div>
       </div>
+
     );
   }
 
@@ -166,3 +164,30 @@ export default class Game extends React.Component {
     0: "clubs",
   };
 }
+
+
+const mapStateToProps = (state) => {
+  return ({
+    playerId: state.player.pid,
+    gameId: state.game.gameId,
+    gameName: state.game.gameName,
+    isHost: state.player.isHost,
+    playersArray: state.firestore.data.games ? state.firestore.data.games[state.game.gameId].Players: null 
+    }
+  )
+
+}
+
+export default compose(
+  firestoreConnect((props) =>{ 
+    return [
+        {
+         collection: 'games',
+         doc: props.location.state.gameId
+        }
+ ]
+}
+ ),
+  connect(mapStateToProps)
+
+)(Game);

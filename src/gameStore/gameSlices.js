@@ -23,82 +23,106 @@ reducers : {
  
 })
 
-export const hostSlice = createSlice({
-name : 'host',
-initialState: {
-  isHost: false
 
-},
-
-reducers: {
-   setHost: (state,action) => {
-       state.isHost = action.payload;
-   }
-
-}
-
-});
 
 export const playerSlice = createSlice({
     name: 'players',
     initialState: {
-        players: []
+        cards: [],
+        pname: '',
+        pid: ' ',
+        isHost: false,
+        
     },
 
     reducers: {
        addPlayer: (state, action) => {
-           state.players.push(action.payload);
-       }   
-  
-
-
+           state.pname = action.payload.pname;
+           state.pid = action.payload.pid;
+           state.isHost = action.payload.isHost;
+       } 
     }
  })
 
 
 export const gameActions = gameSlice.actions;
 export const gameReducer = gameSlice.reducers;
-export const hostActions = hostSlice.actions;
-export const hostReducer = hostSlice.reducers;
+
 export const playerActions = playerSlice.actions;
 export const playerReducer = playerSlice.reducers;
 
-export const isHost = state => state.host.isHost;
+export const isHost = state => state.players.isHost;
 export const gameId = state => state.game.gameId;
 
 export const getPlayers = state => state.players.players;
 
-export const hostSliceReducer = hostSlice.reducer;
+
 export const gameSliceReducer = gameSlice.reducer;
 export const playerSliceReducer = playerSlice.reducer;
 
-export const AddPlayerAsync = gameData => (dispatch, getState, {getFirebase, getFirestore}) => {
- 
+export const HostGameAsync = gameData => (dispatch, getState, {getFirebase, getFirestore}) => {
+    let r = Math.random().toString(36).substring(7);
   const game = {
     gameName: gameData.gameName,
     gameKey: gameData.gameKey,
     Players:[
     {   pname: 'parth',
         cards:[],
-        lifelines:4
+        pid: r
     }
     ]
   }
     const firestore = getFirestore();
   firestore.collection('games').add(game).then((doc)=>{
-      dispatch(gameActions.setGameData({
+    let r = Math.random().toString(36).substring(7);  
+    dispatch(gameActions.setGameData({
           gameId: doc.id, 
           gameName: game.gameName,
           gameKey: game.gameKey
       }));
       dispatch(playerActions.addPlayer(
-         game.Players[0]
+        {
+            pname: gameData.pname,
+            pid: gameData.r,
+            isHost: true
+        }
       ))
-      console.log('game added');
-      console.log(firestore)
+     
       dispatch(push('/startgame',{gameId: doc.id}))
      
   })
 
+
+}
+
+export const JoinGameAsync = gameData => (dispatch, getState, {getFirebase, getFirestore}) => {
+    let r = Math.random().toString(36).substring(7);
+    const player = {
+        pname: gameData.pname,
+        pid: r
+    }
+    const firestore = getFirestore();
+    console.log(player);
+    firestore.collection('games').doc(gameData.gameId).update({
+     Players: firestore.FieldValue.arrayUnion(player)
+    }
+        ).then((doc)=>{
+            console.log(doc);
+           dispatch(gameActions.setGameData({
+               gameName: gameData.gameName,
+               gameKey: gameData.gameKey,
+               gameId: gameData.gameId
+           }))
+          
+           dispatch(playerActions.addPlayer(
+            {
+            pname: player.pname,
+            pid: player.pid,
+            isHost: false
+        }
+         ));
+
+         dispatch(push('/startgame',{gameId: gameData.gameId}))
+        })
 
 }
