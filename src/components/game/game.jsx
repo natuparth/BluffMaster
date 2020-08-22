@@ -12,24 +12,48 @@ class Game extends React.Component {
   classMapping = [];
   cardComponent;
   players = [];
+  pindex;
   
 
   constructor(props) {
     super(props);
-     console.log(props);
-    this.classMapping = this.getClassMapping(+this.props.playersArray.length);
+    this.numberOfPlayers = this.props.playersArray.length;
+    this.classMapping = this.getClassMapping(this.numberOfPlayers);
+   
+    for(var i=0; i<this.numberOfPlayers; i++){
+      if(this.props.playersArray[i].pid === this.props.playerId)
+        {
+          this.pindex = i;
+          break;
+        }
+    }
+    var playerObj = this.props.playersArray[this.pindex];
+    // var playerObj = this.props.playersArray.filter((element, index) => { 
+    //   this.pindex = index;
+    //   return  (element.pid === this.props.playerId)
+    // })[0];
 
-    this.players = props.playersArray.map((doc)=> doc.pname);
-    this.cardComponent = this.getMultiPlayerCardsLayout(this.props.playersArray.length); 
-    var playerObj = this.props.playersArray.filter(element => element.pid === this.props.playerId)[0]
-
+    console.log(playerObj);
+    console.log(this.pindex);
+    this.players.push({
+      pid:  this.props.playersArray[this.pindex].pid,
+      pname: this.props.playersArray[this.pindex].pname
+    })
+    console.log(this.players);
+    for(var j=1;j<this.numberOfPlayers;j++)
+      {
+        console.log(this.props.playersArray[(this.pindex+(j))%(this.numberOfPlayers)].pid);
+        this.players.push({
+            pid:this.props.playersArray[(this.pindex+(j))%(this.numberOfPlayers)].pid,
+            pname: this.props.playersArray[(this.pindex+(j))%(this.numberOfPlayers)].pname
+        })
+      }
+    this.cardComponent = this.getMultiPlayerCardsLayout(this.numberOfPlayers); 
     this.cardArray = Array.from(playerObj.cards);
-   
+   console.log(this.players);
   }
 
-  componentWillReceiveProps(prop) {
-   
-  }
+  
 
   render() {
     const items = [];
@@ -50,9 +74,7 @@ class Game extends React.Component {
     }
     
 
-    return (
-    <div>
-  
+    return (  
  <div className="Game_container">
     {this.cardComponent}
     <div className="player_1">
@@ -61,25 +83,11 @@ class Game extends React.Component {
         </div> 
       </div>
       </div>
-      </div>
+      
 
     );
   }
 
-  DistributeCards = (numberOfDecks) => {
-    var newArr = [...Array(53).keys()].slice(1);
-    var arr = [].concat(...Array(numberOfDecks).fill(newArr));
-    var n = numberOfDecks * 52,
-      i,
-      temp;
-    while (n) {
-      i = Math.floor(Math.random() * n--);
-      temp = arr[i];
-      arr[i] = arr[n];
-      arr[n] = temp;
-    }
-    return arr;
-  };
   getSuitSymbol(suit) {
     if (suit === "spades") return <span className="suit">&spades;</span>;
     else if (suit === "hearts") return <span className="suit">&hearts;</span>;
@@ -90,14 +98,13 @@ class Game extends React.Component {
  getMultiPlayerCardsLayout(numberOfPlayers){
     var i;
     var elem = [];
-    console.log(this.classMapping);
     for(i=2;i<=numberOfPlayers;i++){
         var clsName = this.classMapping[i-1];
         elem.push(
        <div className={clsName}>
-           <h3>{this.players[i-1]}</h3>
-            <div className = "playingCards">
-             <ul className="deck">
+        
+         <div className = "playingCards" style={{display: "inline-block", width: "50%", float:"left"}}>
+              <ul className="deck">
               <li>
                  <div className="card back">
                  </div>    
@@ -108,6 +115,9 @@ class Game extends React.Component {
               </li>
            </ul>
        </div>
+       <div style={{display: "inline-block", width: "45%", float: "right"}}>
+           <h4>{this.players[i-1].pname}</h4>
+         </div>
        </div>
        );
     }
@@ -119,7 +129,7 @@ class Game extends React.Component {
    switch(numberOfPlayers){
       case 2: return ["player_1","player_5"];
        
-      case 3: return ["player_1", "player_2", "player_7"];
+      case 3: return ["player_1", "player_3", "player_7"];
 
       case 4: return ["player_1", "player_3","player_5","player_7"];
 

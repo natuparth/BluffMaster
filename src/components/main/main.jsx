@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import firebase from '../../Firebase';
-import { browserHistory } from 'react-router';
-import { useHistory } from 'react-router-dom';
-import { useSelect, useDispatch } from 'react-redux';
-import { gameActions, HostGameAsync, JoinGameAsync} from '../../gameStore/gameSlices';
+import { useDispatch } from 'react-redux';
+import { HostGameAsync, JoinGameAsync} from '../../gameStore/gameSlices';
 import './main.css';
 
 const db = firebase.firestore();
 
 function Main(){
-    const history = useHistory();
     const dispatch = useDispatch();
     
    
@@ -62,7 +59,6 @@ function createGameHandler(gameName){
 
 function joinGameHandler(gameKey, playerName){
   db.collection('games').where('gameKey' , '==', gameKey).get().then((querySnapShot)=>{
-    //console.log(querySnapShot);
     dispatch(JoinGameAsync({gameId: querySnapShot.docs[0].id, gameKey: gameKey, gameName:querySnapShot.docs[0].gameName,
        pname: playerName}))
     console.log(querySnapShot.docs[0].id);

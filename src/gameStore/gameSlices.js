@@ -1,4 +1,4 @@
-import {createSlice, combineReducers} from '@reduxjs/toolkit';
+import {createSlice} from '@reduxjs/toolkit';
 import { push } from 'connected-react-router';
 
 export const gameSlice = createSlice({
@@ -65,16 +65,15 @@ export const HostGameAsync = gameData => (dispatch, getState, {getFirebase, getF
   const game = {
     gameName: gameData.gameName,
     gameKey: gameData.gameKey,
+    gameStarted: false,
     Players:[
     {   pname: 'parth',
-        cards:[],
         pid: r
     }
     ]
   }
     const firestore = getFirestore();
   firestore.collection('games').add(game).then((doc)=>{
-    let r = Math.random().toString(36).substring(7);  
     dispatch(gameActions.setGameData({
           gameId: doc.id, 
           gameName: game.gameName,
@@ -83,7 +82,7 @@ export const HostGameAsync = gameData => (dispatch, getState, {getFirebase, getF
       dispatch(playerActions.addPlayer(
         {
             pname: gameData.pname,
-            pid: gameData.r,
+            pid: r,
             isHost: true
         }
       ))

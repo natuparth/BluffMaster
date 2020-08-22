@@ -5,7 +5,6 @@ import './App.css';
 import Main from '../main/main';
 import CreateGame from '../createGame/createGame';
 import Game from '../game/game';
-import HostGame from '../hostGame/hostGame';
 import { Switch, Route } from 'react-router-dom';
 import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
 import { createFirestoreInstance } from 'redux-firestore';
@@ -38,7 +37,7 @@ export default class App extends React.Component {
           
     <div className="App App-header">
       <Header/>
-    <div style={ {width:"100%"} }>  
+    <div style={ {width:"100vw"} }>  
       <Switch>
       <Route exact path="/" component={Main}/>
       <Route path="/startgame" component={CreateGame}/>

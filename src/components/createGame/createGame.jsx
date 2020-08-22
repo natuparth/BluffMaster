@@ -1,14 +1,12 @@
 import React from "react";
 import firebase from "../../Firebase";
 import { useState } from "react";
-import { useDispatch, connect } from "react-redux";
+import { connect } from "react-redux";
 import { firestoreConnect} from 'react-redux-firebase';
 import { compose } from 'redux';
 import {history} from '../../gameStore/gameStore';
-import { push } from 'connected-react-router';
 import './createGame.css';
 
-const functions = require('firebase-functions');
 const db = firebase.firestore();
 const historyarr = history;
 const ranks = {
@@ -33,15 +31,16 @@ const suits = {
   3: "hearts",
   0: "clubs",
 };
- function CreateGame({gameId,gameName,isHost, playersArray}) {
+ function CreateGame({gameId,gameName,isHost, playersArray, gameStarted}) {
   
+  if(gameStarted === true){
+    historyarr.push('/game',{gameId: gameId});
+  }
   const isPlayerHost = isHost;
   const [numberOfDecks, setNumberOfDecks] = useState(1);
   const [numberOfLifeLines, setNumberOfLifeLines] = useState(3);
   const numberOfPlayers = playersArray?playersArray.length:0;
-  var elem;
- 
-  console.log(playersArray);
+  
   return (
     <div className='Game_container1'>
      <Players players={playersArray}/>
@@ -55,7 +54,6 @@ const suits = {
     </div>
   );
   function Players(props) { 
-    console.log(props)
    var elem = [];
    var i ;
    if(props.players &&props.players.length >0){
@@ -63,7 +61,6 @@ const suits = {
     elem.push(<li key={props.players[i].pname}><h3>{props.players[i].pname}</h3></li>);
    }
   }
-    console.log(elem);
     return (
       <div className='player_container'>
         <ul>
@@ -126,10 +123,10 @@ const suits = {
        });
      db.collection('games').doc(gameId).update(
        {
+         gameStarted: true,
          Players: newArray
        }
      ).then(()=>{
-       console.log(historyarr);
        historyarr.push('/game',{gameId: gameId});
      })
      
@@ -183,11 +180,13 @@ for(i=1;i<=players;i++)
 };
 
 const mapStateToProps = (state) => {
+ 
   return ({
     gameId: state.game.gameId,
     gameName: state.game.gameName,
     isHost: state.player.isHost,
-    playersArray: state.firestore.data.games ? state.firestore.data.games[state.game.gameId].Players: null 
+    playersArray: state.firestore.data.games ? state.firestore.data.games[state.game.gameId].Players: null,
+    gameStarted: state.firestore.data.games?state.firestore.data.games[state.game.gameId].gameStarted: false
     }
   )
 
