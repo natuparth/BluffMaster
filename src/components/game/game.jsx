@@ -13,13 +13,15 @@ class Game extends React.Component {
   cardComponent;
   players = [];
   pindex;
+  numberOfLifeLines = 5;
   
 
   constructor(props) {
     super(props);
-    this.numberOfPlayers = this.props.playersArray.length;
-    this.classMapping = this.getClassMapping(this.numberOfPlayers);
-   
+   // this.numberOfPlayers = this.props.playersArray.length;
+   this.numberOfPlayers = 8; 
+   this.classMapping = this.getClassMapping(this.numberOfPlayers);
+  /* 
     for(var i=0; i<this.numberOfPlayers; i++){
       if(this.props.playersArray[i].pid === this.props.playerId)
         {
@@ -28,29 +30,73 @@ class Game extends React.Component {
         }
     }
     var playerObj = this.props.playersArray[this.pindex];
+  */
     // var playerObj = this.props.playersArray.filter((element, index) => { 
     //   this.pindex = index;
     //   return  (element.pid === this.props.playerId)
     // })[0];
 
-    console.log(playerObj);
-    console.log(this.pindex);
-    this.players.push({
-      pid:  this.props.playersArray[this.pindex].pid,
-      pname: this.props.playersArray[this.pindex].pname
-    })
+ 
+    this.players = [
+       {pid: "liuzk4", pname: "Manu"},
+       {pid: "ds67kf", pname: "nsu"},
+       {pid: "0wvk", pname: "sfsdf"},
+       {pid: "q2yosi", pname: "manager"},
+       {pid: "rizybq", pname: "sansi"},
+       {pid: "0wvk", pname: "sfsdf"},
+       {pid: "q2yosi", pname: "manager"},
+       {pid: "rizybq", pname: "sansi"}
+
+    ]
+    // this.players.push({
+    //   pid:  this.props.playersArray[this.pindex].pid,
+    //   pname: this.props.playersArray[this.pindex].pname
+    // })
     console.log(this.players);
-    for(var j=1;j<this.numberOfPlayers;j++)
-      {
-        console.log(this.props.playersArray[(this.pindex+(j))%(this.numberOfPlayers)].pid);
-        this.players.push({
-            pid:this.props.playersArray[(this.pindex+(j))%(this.numberOfPlayers)].pid,
-            pname: this.props.playersArray[(this.pindex+(j))%(this.numberOfPlayers)].pname
-        })
-      }
+    // for(var j=1;j<this.numberOfPlayers;j++)
+    //   {
+    //     console.log(this.props.playersArray[(this.pindex+(j))%(this.numberOfPlayers)].pid);
+    //     this.players.push({
+    //         pid:this.props.playersArray[(this.pindex+(j))%(this.numberOfPlayers)].pid,
+    //         pname: this.props.playersArray[(this.pindex+(j))%(this.numberOfPlayers)].pname
+    //     })
+    //   }
     this.cardComponent = this.getMultiPlayerCardsLayout(this.numberOfPlayers); 
-    this.cardArray = Array.from(playerObj.cards);
-   console.log(this.players);
+   // this.cardArray = Array.from(playerObj.cards);
+    this.cardArray = [{suit: "clubs", rank: "K"},
+     {suit: "diams", rank: "9"},
+     {suit: "clubs", rank: "4"},
+     {suit: "spades", rank: "Q"},
+     {suit: "hearts", rank: "5"},
+     {suit: "spades", rank: "A"},
+     {suit: "diams", rank: "4"},
+     {suit: "spades", rank: "3"},
+     {suit: "diams", rank: "9"},
+     {suit: "clubs", rank: "4"},
+     {suit: "spades", rank: "Q"},
+     {suit: "hearts", rank: "5"},
+     {suit: "spades", rank: "A"},
+     {suit: "diams", rank: "4"},
+     {suit: "spades", rank: "3"},
+     {suit: "diams", rank: "9"},
+     {suit: "clubs", rank: "4"},
+     {suit: "spades", rank: "Q"},
+     {suit: "hearts", rank: "5"},
+     {suit: "spades", rank: "A"},
+     {suit: "diams", rank: "4"},
+     {suit: "spades", rank: "3"},
+     {suit: "diams", rank: "9"},
+     {suit: "clubs", rank: "4"},
+     {suit: "spades", rank: "Q"},
+     {suit: "hearts", rank: "5"},
+     {suit: "spades", rank: "A"},
+     {suit: "diams", rank: "4"},
+     {suit: "spades", rank: "3"},
+    
+    ]
+   
+   
+    console.log(this.players);
   }
 
   
@@ -64,7 +110,7 @@ class Game extends React.Component {
       var elem = this.getSuitSymbol(obj.suit);
 
       items.push(
-        <li>
+        <li style={{top: "5em"}}>
           <div className={cardClass}>
             <span className="rank">{obj.rank}</span>
             {elem}
@@ -100,10 +146,12 @@ class Game extends React.Component {
     var elem = [];
     for(i=2;i<=numberOfPlayers;i++){
         var clsName = this.classMapping[i-1];
+        var playerName = this.players[i-1].pname.toUpperCase();
         elem.push(
        <div className={clsName}>
         
          <div className = "playingCards" style={{display: "inline-block", width: "50%", float:"left"}}>
+          
               <ul className="deck">
               <li>
                  <div className="card back">
@@ -113,10 +161,26 @@ class Game extends React.Component {
                  <div className="card back">
                  </div>    
               </li>
+              <li>
+                 <div className="card back">
+                 </div>    
+              </li>
+              <li>
+                 <div className="card back">
+                 </div>    
+              </li>
+              <li>
+                 <div className="card back">
+                 </div>    
+              </li>
+              
+
+
            </ul>
        </div>
-       <div style={{display: "inline-block", width: "45%", float: "right"}}>
-           <h4>{this.players[i-1].pname}</h4>
+       <div style={{display: "inline-block", width: "45%", float: "right", fontFamily: 'cursive'}}>
+           <h4 style={{margin: '2px'}}>{playerName}</h4>
+           <span className="dot red"></span><span className="dot green"></span><span className="dot green"></span><span className="dot"></span>
          </div>
        </div>
        );
@@ -146,10 +210,7 @@ class Game extends React.Component {
 
  }
 
- getPlayerMapping(playerId){
-     
-
- }
+ 
  
   ranks = {
     1: "A",
@@ -178,12 +239,15 @@ class Game extends React.Component {
 
 const mapStateToProps = (state) => {
   return ({
+    gameName: 'hello'
+    /*
     playerId: state.player.pid,
     gameId: state.game.gameId,
     gameName: state.game.gameName,
     isHost: state.player.isHost,
     playersArray: state.firestore.data.games ? state.firestore.data.games[state.game.gameId].Players: null 
-    }
+  */  
+  }
   )
 
 }
@@ -193,8 +257,9 @@ export default compose(
     return [
         {
          collection: 'games',
-         doc: props.location.state.gameId
-        }
+       //  doc: props.location.state.gameId
+       doc: 'k92xBYViTZvUTNNZT73S'  
+      }
  ]
 }
  ),

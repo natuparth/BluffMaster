@@ -64,7 +64,7 @@ const suits = {
    var i ;
    if(props.players &&props.players.length >0){
    for(i=0;i<props.players.length;i++){
-    elem.push(<li key={props.players[i].pname}><span>{props.players[i].pname}</span></li>);
+    elem.push(<li className="game" key={props.players[i].pname}><span>{props.players[i].pname}</span></li>);
    }
   }
     return (
@@ -75,7 +75,7 @@ const suits = {
         <Dot>.</Dot>
         <Dot>.</Dot>
       </h2>
-        <ul>
+        <ul className="game">
          {elem}
         </ul>
       </div>
@@ -133,10 +133,13 @@ const suits = {
            element.cards = playerCards[index].cards; 
                    
        });
+    var playerTurn = Math.floor(Math.random() * newArray.length);
+      
      db.collection('games').doc(gameId).update(
        {
          gameStarted: true,
-         Players: newArray
+         Players: newArray,
+         playerTurn: playerTurn
        }
      ).then(()=>{
        historyarr.push('/game',{gameId: gameId});

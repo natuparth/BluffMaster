@@ -12,8 +12,8 @@
 
 .playingCards .card {
     display: inline-block;
-    width: 3.0em;
-    height: 3.8em;
+    width: 3.5em;
+    height: 4.8em;
     border: 1px solid #666;
     border-radius: .3em;
     -moz-border-radius: .3em;
@@ -50,8 +50,8 @@
     background-color: #ccc;
     background-repeat: repeat;
     background-image: url(data:image/gif;base64,R0lGODlhJAAkAJEAAOjFsezdztOKbL5QKCH5BAAAAAAALAAAAAAkACQAAAL/HC4RAqm/mmLHyHmAbczB11Ea8ombJKSgKo6Z17pXFznmS1JptiX0z3vVhpEKDoUIkoa0olGIUeZUk1RI6Yn2mh/FDAt6frOrRRTqXPpsVLYugzxaVy+YcBdnoWPZOT0E4eckQtZFZBjWoHixQFWl6Nhol6R2p1Okt5TGaEWZA6fjiMdhZgPHeWrTWGVq+jTZg1HYyAEWKLYzmyiGKoUimilz+YYryyTlg5RcDJSAbNx0Q7lMcbIGEyzTK8zVdfVaImzs/QV+prYqWWW2ObkoOApM/Em/rUlIm7fijs8a2EEKEaZ3AsMUgneEU6RcpJbZ27aGHkAO2Ors8xQH1IR0Bn5YnOtVAAA7); /* image is "Pattern 069" from http://www.squidfingers.com/patterns/ */
-    background-image: -moz-repeating-linear-gradient(34% 6% 135deg,#0F1E59, #75A1BF, #3E3E63 50%);
-    background-image: -webkit-gradient(radial, center center, 20, center center, 80, from(#3c3), color-stop(0.4, #363), to(#030));
+    /* background-image: -moz-repeating-linear-gradient(34% 6% 135deg,#0F1E59, #75A1BF, #3E3E63 50%);
+    background-image: -webkit-gradient(radial, center center, 20, center center, 80, from(#3c3), color-stop(0.4, #363), to(#030)); */
     /* yes, it's intentional that Mozilla, Webkit, Opera and IE all will get different backgrounds ... why not? :) */
 }
 
@@ -483,6 +483,7 @@
 .playingCards ul.hand li,
 .playingCards ul.deck li {
     position: absolute;
+    top:0px;
 }
 .playingCards ul.hand li {
     bottom: 0;
@@ -514,6 +515,10 @@
 .playingCards ul.hand li:nth-child(24) { left: 25.3em; }
 .playingCards ul.hand li:nth-child(25) { left: 26.4em; }
 .playingCards ul.hand li:nth-child(26) { left: 27.5em; }
+.playingCards ul.hand li:nth-child(27) { left: 28.6em; }
+.playingCards ul.hand li:nth-child(28) { left: 29.7em; }
+.playingCards ul.hand li:nth-child(29) { left: 30.8em; }
+.playingCards ul.hand li:nth-child(30) { left: 31.9em; }
 
 /* rotate cards if rotateHand option is on */
 .playingCards.rotateHand ul.hand li:nth-child(1) {
@@ -597,13 +602,13 @@
 
 /* deck */
 .playingCards ul.deck li:nth-child(1)  { left: 0;    bottom: 0; }
-.playingCards ul.deck li:nth-child(2)  { left: 2px;  bottom: 1px; }
-.playingCards ul.deck li:nth-child(3)  { left: 4px;  bottom: 2px; }
-.playingCards ul.deck li:nth-child(4)  { left: 6px;  bottom: 3px; }
-.playingCards ul.deck li:nth-child(5)  { left: 8px;  bottom: 4px; }
-.playingCards ul.deck li:nth-child(6)  { left: 10px; bottom: 5px; }
-.playingCards ul.deck li:nth-child(7)  { left: 12px; bottom: 6px; }
-.playingCards ul.deck li:nth-child(8)  { left: 14px; bottom: 7px; }
+.playingCards ul.deck li:nth-child(2)  { left: 4px;  bottom: 3px; }
+.playingCards ul.deck li:nth-child(3)  { left: 8px;  bottom: 6px; }
+.playingCards ul.deck li:nth-child(4)  { left: 12px;  bottom: 3px; }
+.playingCards ul.deck li:nth-child(5)  { left: 16px;  bottom: 4px; }
+.playingCards ul.deck li:nth-child(6)  { left: 20px; bottom: 5px; }
+.playingCards ul.deck li:nth-child(7)  { left: 24px; bottom: 6px; }
+.playingCards ul.deck li:nth-child(8)  { left: 28px; bottom: 7px; }
 .playingCards ul.deck li:nth-child(9)  { left: 16px; bottom: 8px; }
 .playingCards ul.deck li:nth-child(10) { left: 18px; bottom: 9px; }
 .playingCards ul.deck li:nth-child(11) { left: 20px; bottom: 10px; }

@@ -93,10 +93,10 @@ button {
      background-color: rgb(184, 212, 184);
 
     }
-    ul{
+    ul.game{
       list-style: none;
     }
-    li{
+    li.game{
       height: 8vh;
       margin-top:0px;
       margin-bottom:1%;

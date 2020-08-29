@@ -34,12 +34,13 @@ export default class App extends React.Component {
 
   return (
      <ReactReduxFirebaseProvider {...rrfProps}>
-          
+    <div>      
     <div className="App App-header">
       <Header/>
+     </div> 
     <div style={ {width:"100vw", height:"82vh"} }>  
       <Switch>
-       <Route exact path="/" component={Main}/>
+       <Route exact path="/" component={Game}/>
       {/* <Route exact path="/" component={CreateGame}/> */}
       <Route path="/startgame" component={CreateGame}/>
       <Route path="/game" component= {Game}/>
