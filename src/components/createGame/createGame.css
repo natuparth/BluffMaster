@@ -76,7 +76,6 @@ button {
       display: grid;
       border: 2px solid red;
       grid-template-columns: 50% 50%;
-      grid-gap: 10px;
       grid-template-rows: 22% 22% 22% 34%;
     }
 
@@ -93,6 +92,14 @@ button {
      grid-row-end: 5;
      background-color: rgb(184, 212, 184);
 
-
-
+    }
+    ul{
+      list-style: none;
+    }
+    li{
+      height: 8vh;
+      margin-top:0px;
+      margin-bottom:1%;
+      border-bottom-style: ridge;
+      border: saddlebrown solid 1px;
     }

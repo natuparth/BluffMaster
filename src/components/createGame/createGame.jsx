@@ -1,4 +1,5 @@
 import React from "react";
+import { Dot } from 'react-animated-dots';
 import firebase from "../../Firebase";
 import { useState } from "react";
 import { connect } from "react-redux";
@@ -43,11 +44,16 @@ const suits = {
   
   return (
     <div className='Game_container1'>
+    
      <Players players={playersArray}/>
       <div className='game_properties_container'>
+      <h3>{gameName}</h3>
+      <br/>
       <NumberOfDecks />
+      <br/>
       <NumberOfLifeLines />
-      <button onClick={()=>startGameHandler(numberOfDecks,numberOfPlayers,gameId)} disabled={isPlayerHost}>
+      <br/>
+      <button className="big-button" onClick={()=>startGameHandler(numberOfDecks,numberOfPlayers,gameId)} disabled={isPlayerHost}>
         Start Game
       </button>
       </div>
@@ -58,11 +64,17 @@ const suits = {
    var i ;
    if(props.players &&props.players.length >0){
    for(i=0;i<props.players.length;i++){
-    elem.push(<li key={props.players[i].pname}><h3>{props.players[i].pname}</h3></li>);
+    elem.push(<li key={props.players[i].pname}><span>{props.players[i].pname}</span></li>);
    }
   }
     return (
       <div className='player_container'>
+       <h2>
+      Waiting for Players
+        <Dot>.</Dot>
+        <Dot>.</Dot>
+        <Dot>.</Dot>
+      </h2>
         <ul>
          {elem}
         </ul>
@@ -182,12 +194,21 @@ for(i=1;i<=players;i++)
 const mapStateToProps = (state) => {
  
   return ({
-    gameId: state.game.gameId,
-    gameName: state.game.gameName,
-    isHost: state.player.isHost,
+     gameId: state.game.gameId,
+     gameName: state.game.gameName,
+     isHost: state.player.isHost,
+   //gameId: 'wzN8dg1irzTvqgbiXUvB',
+    //gameName: 'new_game',
+    //isHost: 'false',
     playersArray: state.firestore.data.games ? state.firestore.data.games[state.game.gameId].Players: null,
     gameStarted: state.firestore.data.games?state.firestore.data.games[state.game.gameId].gameStarted: false
-    }
+   
+//     playersArray:[{pname: 'parth'},
+//     {pname: 'lokesh'},
+// {pname: 'samarth'}
+// ],
+    //gameStarted: false
+  }
   )
 
 }
@@ -198,6 +219,7 @@ export default compose(
         {
          collection: 'games',
          doc: props.location.state.gameId
+       // doc: 'wzN8dg1irzTvqgbiXUvB'
         }
  ]
 }
