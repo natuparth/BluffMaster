@@ -87,7 +87,7 @@ button {
   }
   .create_host_container{
     width: 50%;
-    padding-top: 5%;
+    padding-top: 2%;
     margin-left:25%;
     margin-right:25%;
     grid-row-start: 2;
@@ -152,6 +152,10 @@ button {
  }
 
  .createJoinGameButton{
- margin-top: 15%;
+ margin-top: 8%;
+ left: 35%;
+ }
 
+ .button-container{
+   padding-left: 17%;
  }

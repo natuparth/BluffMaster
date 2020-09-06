@@ -139,7 +139,7 @@ const suits = {
        {
          gameStarted: true,
          Players: newArray,
-         playerTurn: playerTurn
+         playerTurn: newArray[playerTurn].pid
        }
      ).then(()=>{
        historyarr.push('/game',{gameId: gameId});

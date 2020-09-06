@@ -16,6 +16,7 @@ function Main() {
   return (
     <div className="Main_container">
       <div className="create_host_container">
+        <div className="button-container">
         <button
           className="big-button"
           onClick={() => {
@@ -34,8 +35,8 @@ function Main() {
         >
           Host Game
         </button>
-
-        <div style={{ display: joinGame, marginTop: "15%" }}>
+        </div>    
+        <div style={{ display: joinGame, marginTop: "8%" }}>
           <div class="form__group field">
             <input
               type="input"
@@ -59,7 +60,7 @@ function Main() {
             Join Game
           </button>
         </div>
-        <div style={{ display: createGame, marginTop: "15%" }}>
+        <div style={{ display: createGame, marginTop: "8%" }}>
           <div class="form__group field">
             <input
               type="input"
