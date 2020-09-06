@@ -14,6 +14,7 @@ class Game extends React.Component {
   players = [];
   pindex;
   numberOfLifeLines = 5;
+  stylesArray = [];
   
 
   constructor(props) {
@@ -21,7 +22,8 @@ class Game extends React.Component {
    // this.numberOfPlayers = this.props.playersArray.length;
    this.numberOfPlayers = 8; 
    this.classMapping = this.getClassMapping(this.numberOfPlayers);
-  /* 
+   
+   /* 
     for(var i=0; i<this.numberOfPlayers; i++){
       if(this.props.playersArray[i].pid === this.props.playerId)
         {
@@ -61,7 +63,7 @@ class Game extends React.Component {
     //         pname: this.props.playersArray[(this.pindex+(j))%(this.numberOfPlayers)].pname
     //     })
     //   }
-    this.cardComponent = this.getMultiPlayerCardsLayout(this.numberOfPlayers); 
+  //  this.cardComponent = this.getMultiPlayerCardsLayout(this.numberOfPlayers); 
    // this.cardArray = Array.from(playerObj.cards);
     this.cardArray = [{suit: "clubs", rank: "K"},
      {suit: "diams", rank: "9"},
@@ -95,22 +97,96 @@ class Game extends React.Component {
     
     ]
    
-   
-    console.log(this.players);
+    this.state={
+      cards: this.cardArray,
+      stylesArray: Array(this.cardArray.length).fill({
+        selected: false,
+        styles: {
+          top: '5em'
+        }
+      })
+    }
+  
   }
 
-  
+  handleCardClick(e){
+    var newArr = this.state.stylesArray;
+    if(newArr[e.currentTarget.dataset.id].selected == true)
+    {
+      newArr[e.currentTarget.dataset.id] = {
+        selected: false,
+        styles:{
+        top: '5em',
+       }  
+      } 
+      this.setState({
+        stylesArray: newArr
+      })
+    }
+    else{
+    newArr[e.currentTarget.dataset.id] = {
+      selected: true,
+      styles:{
+      top: '5em',
+      transform: 'translate(0px,-50px)',
+    }
+  }
+   this.setState({
+     stylesArray: newArr
+   })
+  }
+    console.log(this.state);
+    console.log(e.currentTarget.dataset);
+  }
+
+  moveHandler(){
+    var tempArr = this.state.cards;
+    var updatedCards = [];
+    var stylesArray = this.state.stylesArray;
+    var updatedStyles = [];
+    var selectedCards = [];
+    var indexArr = [];
+    console.log(this.state.cards.length);
+    for(var i=0;i< this.state.cards.length;i++){
+      if(stylesArray[i].selected === true)
+        { 
+          selectedCards.push(tempArr[i]);
+        //  indexArr.push(i);
+        }
+        else{
+           updatedCards.push(tempArr[i]);
+           updatedStyles.push(stylesArray[i]);
+        }
+    }
+
+    // for(var i=0;i<selectedCards.length;i++){
+    //   tempArr.splice(indexArr[i],1)
+    //   stylesArray.splice(indexArr[i],1);
+    // }
+      this.setState({
+        cards: updatedCards,
+        stylesArray: updatedStyles
+      })
+    console.log(selectedCards);
+    console.log(updatedCards);
+    console.log(updatedStyles);
+  }
 
   render() {
     const items = [];
     var i = 0;
-    for(i=0;i< this.cardArray.length;i++){
-      var obj = this.cardArray[i];
+    for(i=0;i<this.state.cards.length;i++){
+      var obj = this.state.cards[i];
+    
       var cardClass = "card rank-" + obj.rank + " " + obj.suit;
       var elem = this.getSuitSymbol(obj.suit);
 
       items.push(
-        <li style={{top: "5em"}}>
+        <li key={i} data-id={i} style={
+         this.state.stylesArray[i].styles
+        }
+        onClick={this.handleCardClick.bind(this)}
+        >
           <div className={cardClass}>
             <span className="rank">{obj.rank}</span>
             {elem}
@@ -121,11 +197,15 @@ class Game extends React.Component {
     
 
     return (  
- <div className="Game_container">
-    {this.cardComponent}
+   <div className="Game_container">
+   
+    <GetMultiPlayerCardsLayout players={this.players} classMapping={this.classMapping} numberOfPlayers={this.numberOfPlayers} playerTurn="0wvk"></GetMultiPlayerCardsLayout>
+     <PlayingZone numberOfCards={5}></PlayingZone>
+  
     <div className="player_1">
      <div className="playingCards fourColours faceImages">
           <ul className="hand">{items}</ul>
+          <button onClick={this.moveHandler.bind(this)}>Make a Move</button>
         </div> 
       </div>
       </div>
@@ -141,53 +221,7 @@ class Game extends React.Component {
     else return <span className="suit">&clubs;</span>;
   }
     
- getMultiPlayerCardsLayout(numberOfPlayers){
-    var i;
-    var elem = [];
-    for(i=2;i<=numberOfPlayers;i++){
-        var clsName = this.classMapping[i-1];
-        var playerName = this.players[i-1].pname.toUpperCase();
-        elem.push(
-       <div className={clsName}>
-        
-         <div className = "playingCards" style={{display: "inline-block", width: "50%", float:"left"}}>
-          
-              <ul className="deck">
-              <li>
-                 <div className="card back">
-                 </div>    
-              </li>
-              <li>
-                 <div className="card back">
-                 </div>    
-              </li>
-              <li>
-                 <div className="card back">
-                 </div>    
-              </li>
-              <li>
-                 <div className="card back">
-                 </div>    
-              </li>
-              <li>
-                 <div className="card back">
-                 </div>    
-              </li>
-              
-
-
-           </ul>
-       </div>
-       <div style={{display: "inline-block", width: "45%", float: "right", fontFamily: 'cursive'}}>
-           <h4 style={{margin: '2px'}}>{playerName}</h4>
-           <span className="dot red"></span><span className="dot green"></span><span className="dot green"></span><span className="dot"></span>
-         </div>
-       </div>
-       );
-    }
-    return elem;  
-
- }
+ 
  
  getClassMapping(numberOfPlayers){
    switch(numberOfPlayers){
@@ -235,7 +269,106 @@ class Game extends React.Component {
     0: "clubs",
   };
 }
+function GetMultiPlayerCardsLayout(props){
+  var i;
+  var elem = [];
+  var animated;
+  for(i=2;i<=props.numberOfPlayers;i++){
+      if(props.players[i-1].pid === props.playerTurn){
+        animated = "animated";
+      }
+      else
+        animated = "";
+      var clsName = props.classMapping[i-1];
+      var playerName = props.players[i-1].pname.toUpperCase();
+      elem.push(
+     <div className={clsName}>
+      
+       <div className = "playingCards" style={{display: "inline-block", width: "50%", float:"left"}}>
+        
+            <ul className="deck">
+            <li>
+               <div className="card back">
+               </div>    
+            </li>
+            <li>
+               <div className="card back">
+               </div>    
+            </li>
+            <li>
+               <div className="card back">
+               </div>    
+            </li>
+            <li>
+               <div className="card back">
+               </div>    
+            </li>
+            <li>
+               <div className="card back">
+               </div>    
+            </li>
+            
 
+
+         </ul>
+     </div>
+     
+     
+     <div className = {animated} style={{display: "inline-block", width: "45%", float: "right", fontFamily: 'cursive'}}>
+         <h4 style={{margin: '2px'}}>{playerName}</h4>
+         <span className="dot red"></span><span className="dot green"></span><span className="dot green"></span><span className="dot"></span>
+       </div>
+     </div>
+     );
+  }
+  return elem;  
+
+}
+
+function PlayingZone(props){
+
+  var elem = [];
+ // var x = 1.9;
+  //var y = 1.5;
+  var x = 0;
+  var y = 0;
+  //var angle = -42;
+  
+  var angle = 0;
+  var left = 0;
+  var right = 0;
+  var styleObj;
+   
+  var noOf = 24;
+  for(var i=0; i<noOf; i++)
+   {  
+       styleObj = {
+            position: 'absolute',
+            "-webkit-transform" : "translate("+x+"px, "+y+"px) rotate("+angle+"deg)",
+            "-o-transform": "translate("+x+"px, "+y+"px) rotate("+angle+"deg)",
+             "transform": "translate("+x+"px, "+y+"px) rotate("+angle+"deg)",
+         } 
+      
+
+     elem.push(   
+      <div style={styleObj} className="cardCss backCardCss">
+      </div>     
+     )
+    angle = angle + 15;
+    x = x+1*30*Math.cos(angle*3.14/180);
+    y =y+ 1*30*Math.sin(angle*3.14/180);
+   }
+  return( 
+  <div className="playingZone">  
+  <div  className="outerRing">
+    {elem}
+  <div className="cardsNumber">
+    {props.numberOfCards}
+    </div>         
+ </div>
+ </div>
+  )
+}
 
 const mapStateToProps = (state) => {
   return ({

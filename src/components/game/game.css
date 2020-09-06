@@ -10,6 +10,16 @@
     grid-template-rows: 22% 22% 22% 34%;
   }
  
+   .playingZone{
+     grid-column-start:2;
+     grid-column-end: 5;
+    
+     grid-row-start: 2;
+     grid-row-end: 4;
+    text-align: center;
+
+   }
+
    .player_1{
     
     grid-column-start: 2;
@@ -91,3 +101,70 @@
     .green{
     background-color:green;
    }
+   .outerRing{
+    border-radius: 50%;
+     width:30%;
+     margin-left: 25%;
+     position: relative;
+     padding-bottom: 30%;
+    }
+    .outerRing:after{
+      padding-bottom: 100%;
+    }
+   .innerRing{border: 2px solid blue;
+      border-radius: 50%;
+      width:50%;
+       height: 50%;
+       margin-left: 25%;
+      
+      }
+
+  
+   @keyframes glowing {
+    0% { box-shadow: inset 0 0 -40px #c4a300; }
+    40% { box-shadow: inset 0 0 60px #c4a300; }
+    60% { box-shadow: inset 0 0 60px #c4a300; }
+    100% { box-shadow: inset 0 0 -40px #c4a300; }
+  }
+  
+  .animated {
+    animation: glowing 3000ms infinite;
+  }
+
+  .cardCss {
+    display: inline-block;
+    width: 1.1em;
+    height: 2.0em;
+    border: 1px solid #666;
+    border-radius: .3em;
+    -moz-border-radius: .3em;
+    -webkit-border-radius: .3em;
+    -khtml-border-radius: .3em;
+    padding: .25em;
+    margin: 0 .5em .5em 0;
+    text-align: center;
+    font-size: 1.2em; /* @change: adjust this value to make bigger or smaller cards */
+    font-weight: normal;
+    font-family: Arial, sans-serif;
+    position: relative;
+    background-color: #fff;
+    -moz-box-shadow: .2em .2em .5em #333;
+    -webkit-box-shadow: .2em .2em .5em #333;
+    box-shadow: .2em .2em .5em #333;
+}
+
+.backCardCss{
+  text-indent: -4000px;
+  background-color: #ccc;
+  background-repeat: repeat;
+  background-image: url(data:image/gif;base64,R0lGODlhJAAkAJEAAOjFsezdztOKbL5QKCH5BAAAAAAALAAAAAAkACQAAAL/HC4RAqm/mmLHyHmAbczB11Ea8ombJKSgKo6Z17pXFznmS1JptiX0z3vVhpEKDoUIkoa0olGIUeZUk1RI6Yn2mh/FDAt6frOrRRTqXPpsVLYugzxaVy+YcBdnoWPZOT0E4eckQtZFZBjWoHixQFWl6Nhol6R2p1Okt5TGaEWZA6fjiMdhZgPHeWrTWGVq+jTZg1HYyAEWKLYzmyiGKoUimilz+YYryyTlg5RcDJSAbNx0Q7lMcbIGEyzTK8zVdfVaImzs/QV+prYqWWW2ObkoOApM/Em/rUlIm7fijs8a2EEKEaZ3AsMUgneEU6RcpJbZ27aGHkAO2Ors8xQH1IR0Bn5YnOtVAAA7); /* image is "Pattern 069" from http://www.squidfingers.com/patterns/ */
+ 
+}
+
+.cardsNumber{
+  position: absolute;
+  text-align: center;
+  font-size: 4.3em;
+ transform: translate(90px,90px) ;
+  width: 25%;
+}
