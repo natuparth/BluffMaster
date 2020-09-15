@@ -1,6 +1,6 @@
-//import * as firebase from 'firebase';
-import firebase from 'firebase/app';
-//import firestore from 'firebase/firestore'
+import * as firebase from 'firebase';
+//import firebase from 'firebase/app';
+
 
 //const settings = {timestampsInSnapshots: true};
 
@@ -14,8 +14,8 @@ const config = {
     appId: "1:815359838355:web:460c81543534fd2c9d6566",
     measurementId: "G-RKSHSP1WL2"
 };
-firebase.initializeApp(config);
 
+firebase.initializeApp(config);
 
 
 export default firebase;

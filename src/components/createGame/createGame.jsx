@@ -67,13 +67,17 @@ const suits = {
     elem.push(<li className="game" key={props.players[i].pname}><span>{props.players[i].pname}</span></li>);
    }
   }
+
+  const nodeRef1 = React.useRef(null);
+  const nodeRef2 = React.useRef(null);
+  const nodeRef3 = React.useRef(null);
     return (
       <div className='player_container'>
        <h2>
       Waiting for Players
-        <Dot>.</Dot>
-        <Dot>.</Dot>
-        <Dot>.</Dot>
+        <Dot nodeRef={nodeRef1}>.</Dot>
+        <Dot nodeRef={nodeRef2}>.</Dot>
+        <Dot nodeRef={nodeRef3}>.</Dot>
       </h2>
         <ul className="game">
          {elem}

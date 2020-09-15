@@ -1,5 +1,5 @@
 import React from 'react';
-import store from '../../gameStore/gameStore';
+import {store} from '../../gameStore/gameStore';
 import Header from '../header/Header';
 import './App.css';
 import Main from '../main/main';
@@ -10,10 +10,8 @@ import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
 import { createFirestoreInstance } from 'redux-firestore';
 import firebase from '../../Firebase';
 
-const rrfConfig = { userProfile: 'users' } // react-redux-firebase config
 
-// Initialize firebase instance
-
+const rrfConfig = { userProfile: 'users' }
 const rrfProps = {
   firebase,
   config: rrfConfig,
@@ -23,10 +21,8 @@ const rrfProps = {
 
 
 export default class App extends React.Component {
-  players = ["one","two","three","four"];
   constructor() {
     super();
-    this.state = {value : 4}
   }
   
 

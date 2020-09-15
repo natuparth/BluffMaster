@@ -37,17 +37,17 @@ function Main() {
         </button>
         </div>    
         <div style={{ display: joinGame, marginTop: "8%" }}>
-          <div class="form__group field">
+          <div className="form__group field">
             <input
               type="input"
-              class="form__field"
+              className="form__field"
               placeholder="Game Key"
               name="gamekey"
               required
               value={gameId}
               onChange={(event) => setGameId(event.target.value)}
             />
-            <label for="gamekey" class="form__label">
+            <label htmlFor="gamekey" className="form__label">
               Game Key
             </label>
           </div>
@@ -61,17 +61,17 @@ function Main() {
           </button>
         </div>
         <div style={{ display: createGame, marginTop: "8%" }}>
-          <div class="form__group field">
+          <div className="form__group field">
             <input
               type="input"
-              class="form__field"
+              className="form__field"
               placeholder="Game Name"
               name="gamename"
               required
               value={gameName}
               onChange={(event) => setGameName(event.target.value)}
             />
-            <label for="gamename" class="form__label">
+            <label htmlFor="gamename" className="form__label">
               Game Name
             </label>
           </div>
@@ -88,17 +88,17 @@ function Main() {
       </div>
 
       <div className="player_name">
-      <div class="form__group field">
+      <div className="form__group field">
             <input
               type="input"
-              class="form__field"
+              className="form__field"
               placeholder="Game Name"
               name="playername"
               required
               value={playerName}
               onChange={(event) => setPlayerName(event.target.value)}
             />
-            <label for="playername" class="form__label">
+            <label htmlFor="playername" className="form__label">
               Player Name
             </label>
           </div>

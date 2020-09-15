@@ -63,6 +63,9 @@ export const playerSliceReducer = playerSlice.reducer;
 export const HostGameAsync = gameData => (dispatch, getState, {getFirebase, getFirestore}) => {
     let r = Math.random().toString(36).substring(7);
   const game = {
+    gameCards: [],  
+    rank: '',
+    bluff: false,
     gameName: gameData.gameName,
     gameKey: gameData.gameKey,
     gameStarted: false,
@@ -73,7 +76,7 @@ export const HostGameAsync = gameData => (dispatch, getState, {getFirebase, getF
     ]
   }
     const firestore = getFirestore();
-  firestore.collection('games').add(game).then((doc)=>{
+    firestore.collection('games').add(game).then((doc)=>{
     dispatch(gameActions.setGameData({
           gameId: doc.id, 
           gameName: game.gameName,
@@ -125,3 +128,17 @@ export const JoinGameAsync = gameData => (dispatch, getState, {getFirebase, getF
         })
 
 }
+
+// export const MakeAMove = gameData => (getFirestore) => {
+//     const firestore = getFirestore();
+//     firestore.collection('games').doc(gameData.gameId).update({
+//      gameCards: firestore.FieldValue.arrayUnion(gameData.gameCards),
+//      playerTurn: gameData.playerTurn,
+//      bluff: gameData.bluff
+//     }
+//     ).then((doc)=>{
+//         console.log(doc);
+//     })
+
+//
+//}

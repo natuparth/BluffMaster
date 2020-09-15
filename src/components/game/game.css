@@ -13,20 +13,35 @@
    .playingZone{
      grid-column-start:2;
      grid-column-end: 5;
-    
      grid-row-start: 2;
      grid-row-end: 4;
     text-align: center;
 
    }
 
+   .myControls{
+     margin-left: 10%;
+     margin-top: 15%;
+    grid-column-start: 1;
+    grid-column-end: 1;
+    grid-row-start: row3-start;
+    grid-row-end: 4;
+   
+   }
+  
+   .cardSelector{
+    width: 20%;
+    float: left;
+    background-color: #c4a300; 
+    transform: translate(2.2em,1.0em);
+
+   }
    .player_1{
     
     grid-column-start: 2;
     grid-column-end: 5;
     grid-row-start: row3-start;
     grid-row-end: 4;
-   
    }
    .player_8{
     display: flex;
@@ -165,6 +180,12 @@
   position: absolute;
   text-align: center;
   font-size: 4.3em;
- transform: translate(90px,90px) ;
+ transform: translate(70px,90px) ;
   width: 25%;
+}
+
+.cardCss.playCard{
+  width: 3.2em;
+  height: 4.7em;
+  transform: translate(190px,90px) ;
 }
