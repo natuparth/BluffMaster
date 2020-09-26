@@ -130,23 +130,42 @@ const suits = {
   
   function startGameHandler(numberOfDecks, numberOfPlayers, gameId) {
     var playerCards = DistributeCards(numberOfDecks,numberOfPlayers);
-    
-    db.collection('games').doc(gameId).get().then((documentsnapshot)=>{
+    var docRef = db.collection('games').doc(gameId);
+    docRef.get().then((documentsnapshot)=>{
      var newArray=documentsnapshot.data().Players
-     newArray.forEach((element, index) => {
-           element.cards = playerCards[index].cards; 
+    //  newArray.forEach((element, index) => {
+    //        element.cards = playerCards[index].cards; 
                    
-       });
+    //    });
+       var cardDist = {};
+       newArray.forEach((element, index) => {
+                var name = element.pid
+                cardDist[name] = playerCards[index].cards
+                
+       })
+ 
+    // var batch = db.batch();
+    // console.log(newArray);
+    //  for(var i=0;i<newArray.length;i++){   
+    //   var collRef = docRef.collection('playerCards').doc(newArray[i].pid);
+    //   batch.set(collRef,{cards: playerCards[i].cards})
+    // }
+   
+
     var playerTurn = Math.floor(Math.random() * newArray.length);
       
      db.collection('games').doc(gameId).update(
        {
          gameStarted: true,
          Players: newArray,
-         playerTurn: newArray[playerTurn].pid
+         playerTurn: newArray[playerTurn].pid,
+         ...cardDist
        }
      ).then(()=>{
+     // await batch.commit()
+     // console.log('write successful')
        historyarr.push('/game',{gameId: gameId});
+           
      })
      
    
@@ -223,11 +242,12 @@ const mapStateToProps = (state) => {
 export default compose(
   firestoreConnect((props) =>{ 
     return [
-        {
-         collection: 'games',
-         doc: props.location.state.gameId
-       // doc: 'wzN8dg1irzTvqgbiXUvB'
-        }
+      
+      {
+        collection: 'games',
+        doc: props.location.state.gameId
+      },
+      
  ]
 }
  ),

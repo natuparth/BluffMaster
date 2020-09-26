@@ -79,7 +79,12 @@ class Game extends React.Component {
     // ]
     this.handleCardClick = this.handleCardClick.bind(this);
     this.moveHandler = this.moveHandler.bind(this);
+    this.passHandler = this.passHandler.bind(this);
+    this.handleCardSelectClick = this.handleCardSelectClick.bind(this);
+    this.challengeHandler = this.challengeHandler.bind(this);
+
      // for main game
+     console.log(props.playerCards)
      this.playerTurn = props.playerTurn;
      for (var i = 0; i < this.numberOfPlayers; i++) {
        if (this.props.playersArray[i].pid === this.props.playerId) {
@@ -103,8 +108,13 @@ class Game extends React.Component {
     }
     
     console.log(this.players);
-    this.cardArray = Array.from(playerObj.cards);
-    this.state = {
+   // this.cardArray = Array.from(playerObj.cards);
+    this.cardArray = this.props.myCards;
+   this.state = {
+      bluff: this.props.bluff,
+      lastPlayer: this.props.lastPlayer,
+      pindex: this.pindex,
+      playerId: this.props.playerId,
       playCard: this.props.playCard,
       playerTurn: this.props.playerTurn,
       gameCards: this.props.gameCards,
@@ -115,6 +125,8 @@ class Game extends React.Component {
           top: "5em",
         },
       }),
+      newMove: this.props.newMove,
+      cardSelected: 'none'
     };
   }
   
@@ -122,6 +134,7 @@ class Game extends React.Component {
     if(this.props.gameCards != previousState.gameCards)
     this.setState({
       gameCards: this.props.gameCards,
+      bluff: this.props.bluff
     })
     if(this.props.playerTurn != previousState.playerTurn) 
     this.setState({
@@ -131,6 +144,15 @@ class Game extends React.Component {
       this.setState({
         playCard: this.props.playCard
       })
+      if(this.props.newMove != previousState.newMove)
+      this.setState({
+        newMove: this.props.newMove
+      })
+      if(this.props.lastPlayer != previousState.lastPlayer) 
+    this.setState({
+      lastPlayer: this.props.lastPlayer,
+    })
+   
   }
   handleCardClick(e) {
     var newArr = this.state.stylesArray;
@@ -157,6 +179,11 @@ class Game extends React.Component {
       });
     }
    }
+  handleCardSelectClick(e){
+    this.setState({
+      cardSelected: e.currentTarget.dataset.id
+    })
+  } 
 
   moveHandler(playCard) {
     var tempArr = this.state.cards;
@@ -172,12 +199,23 @@ class Game extends React.Component {
         updatedStyles.push(stylesArray[i]);
       }
     }
+
+    if(selectedCards.length == 0){
+     alert('Please select some cards to play');
+     return ;
+    }
     this.setState({
       cards: updatedCards,
       stylesArray: updatedStyles,
     });
     var bluff = false;
     var rank = playCard;
+    if(this.state.newMove == true)
+      {
+        rank = this.state.cardSelected;
+
+      }
+
     for(var j=0;j<selectedCards.length;j++)
     {
       if(selectedCards[j].rank !== rank)
@@ -186,10 +224,20 @@ class Game extends React.Component {
           break;
         }
     }
-  db.collection('games').doc(this.props.gameId).update({
+    var pid = this.state.playerId;
+    var cardsObj = {
+
+    };
+   cardsObj[pid] = updatedCards;
+   console.log(cardsObj);
+   db.collection('games').doc(this.props.gameId).update({
+    ...cardsObj,
     gameCards: firebase.firestore.FieldValue.arrayUnion(...selectedCards),
     playerTurn: this.players[1].pid,
-    bluff: bluff
+    bluff: bluff,
+    rank: this.state.newMove == true ? rank : playCard,
+    newMove: false,
+    lastPlayer: this.state.playerId 
    }
    ).then((doc)=>{
        console.log(doc);
@@ -198,7 +246,45 @@ class Game extends React.Component {
     console.log(updatedCards);
     console.log(updatedStyles);
   }
+  passHandler(){
+    db.collection('games').doc(this.props.gameId).update({
+      playerTurn: this.players[1].pid,
+      }
+     ).then((doc)=>{
+         console.log(doc);
+     })
 
+  }
+  challengeHandler(bluff, lastPlayer){
+    if(bluff == true){
+      var updateObj = {};
+      updateObj[lastPlayer] = firebase.firestore.FieldValue.arrayUnion(...this.state.gameCards);
+      updateObj['gameCards'] = [];
+      updateObj['newMove'] = true;
+      alert('your guess was wrong! player has played correct cards')
+      db.collection('games').doc(this.props.gameId).update(updateObj).then(()=>{
+        console.log('cards updated');
+      })
+ 
+
+    }
+
+    else{
+      var updateObj = {};
+      updateObj[this.state.playerId] = firebase.firestore.FieldValue.arrayUnion(...this.state.gameCards);
+      updateObj['gameCards'] = [];
+      updateObj['newMove'] = true;
+      updateObj['playerTurn'] = lastPlayer;
+      alert('Yayy! Your guess was correct! player has played wrong cards')
+      
+      db.collection('games').doc(this.props.gameId).update(updateObj).then(()=>{
+        console.log('cards updated');
+      })
+    }
+
+
+
+  }
   render() {
     const items = [];
     var i = 0;
@@ -239,7 +325,9 @@ class Game extends React.Component {
         <PlayingZone numberOfCards={this.state.gameCards.length} playCard={this.state.playCard}></PlayingZone>
 
         <div className={player1Class}>
-          <CardPicker></CardPicker>
+          <CardPicker playerTurn={this.state.playerTurn} playerId={this.props.playerId} newMove={this.state.newMove} 
+          action = {this.handleCardSelectClick}
+          ></CardPicker>
           <div className="playingCards fourColours faceImages" style={{marginLeft: "20%"}}>
             <ul className="hand">{items}</ul>
             </div>          
@@ -254,9 +342,9 @@ class Game extends React.Component {
         </div>
             <button onClick={()=>{this.moveHandler(this.props.playCard)}} disabled={!myTurn}>Play</button>
             <br/>
-            <button onClick={()=>{this.moveHandler(this.props.playCard)}} disabled={!myTurn}>Pass</button>
+            <button onClick={()=>{this.passHandler()}} disabled={!myTurn}>Pass</button>
             <br/>
-            <button onClick={()=>{this.moveHandler(this.props.playCard)}} disabled={!myTurn}>Challenge</button>
+            <button onClick={()=>{this.challengeHandler(this.state.bluff, this.state.lastPlayer)}} disabled={!myTurn}>Challenge</button>
         </div>
       </div>
     );
@@ -320,144 +408,156 @@ class Game extends React.Component {
     }
   }
 
-  
-
   suits = {
     1: "spades",
     2: "diams",
     3: "hearts",
     0: "clubs",
-  };
-}
-function GetMultiPlayerCardsLayout(props) {
- var i;
-  var elem = [];
-  var animated;
-  for (i = 2; i <= props.numberOfPlayers; i++) {
-    if (props.players[i - 1].pid === props.playerTurn) {
-      animated = "animated";
-    } else animated = "";
-    var clsName = props.classMapping[i - 1];
-    var playerName = props.players[i - 1].pname.toUpperCase();
-    var cardArray = [];
-     for(var j=0;j<5;j++)  
-         cardArray.push( <li key={j}>
-          <div className="card back"></div>
-        </li>)
-    elem.push(
-      <div className={clsName}>
-        <div
-          className="playingCards"
-          style={{ display: "inline-block", width: "50%", float: "left" }}
-        >
-          <ul className="deck" >
-             {cardArray}
-           </ul>
-        </div>
-
-        <div
-          className={animated}
-          style={{
-            display: "inline-block",
-            width: "45%",
-            float: "right",
-            fontFamily: "cursive",
-          }}
-        >
-          <h4 style={{ margin: "2px" }}>{playerName}</h4>
-          <span className="dot red"></span>
-          <span className="dot green"></span>
-          <span className="dot green"></span>
-          <span className="dot"></span>
-        </div>
-      </div>
-    );
-  }
-  return elem;
-}
-
-function PlayingZone(props) {
-  var elem = [];
-  var x = 0;
-  var y = 0;
-  var angle = 0;
-  var styleObj;
-
-  //var noOf = 24;
-  for (var i = 0; i < props.numberOfCards; i++) {
-    styleObj = {
-      position: "absolute",
-      "WebkitTransform":
-        "translate(" + x + "px, " + y + "px) rotate(" + angle + "deg)",
-      "OTransform":
-        "translate(" + x + "px, " + y + "px) rotate(" + angle + "deg)",
-      transform: "translate(" + x + "px, " + y + "px) rotate(" + angle + "deg)",
-    };
-
-    elem.push(<div style={styleObj} className="cardCss backCardCss"></div>);
-    angle = angle + 15;
-    x = x + 1 * 30 * Math.cos((angle * 3.14) / 180);
-    y = y + 1 * 30 * Math.sin((angle * 3.14) / 180);
   }
   
-  return (
-    <div className="playingZone">
-      <div className="outerRing">
-        {elem}
-        <div className="cardsNumber">{props.numberOfCards}</div>
-        
-        <div className="cardCss playCard">   
-        <span>Play Card</span>
-             <h2 style={{marginTop: "0px"}}>{props.playCard}</h2>
-           </div>
-        
-      </div>
-    </div>
-  );
 }
-
-function CardPicker(){
-
-  var elem = [];
-  var x = 0;
-  var y = 0;
-  var angle = 0;
-  var styleObj;
-
-  for (var i = 1; i < 14; i++) {
-    styleObj = {
-      position: "absolute",
-      "WebkitTransform":
-        "translate(" + x + "px, " + y + "px) rotate(" + angle + "deg)",
-      "OTransform":
-        "translate(" + x + "px, " + y + "px) rotate(" + angle + "deg)",
-      transform: "translate(" + x + "px, " + y + "px) rotate(" + angle + "deg)",
-    };
-   var cardRank = ranks[i];
-  elem.push(<div style={styleObj} className="cardCss" data-id={cardRank} onClick={(e)=>{cardSelectorClick(e)}}><span>{cardRank}</span></div>);
-    angle = angle + (360)/13;
-    x = x + 1 * 35 * Math.cos((angle * 3.14) / 180);
-    y = y + 1 * 35 * Math.sin((angle * 3.14) / 180);
-  }
- return(
-  <div className="cardSelector">
-     {elem}
-  </div>  
- )
-
-}
-
-function cardSelectorClick(e){
-  console.log(e.currentTarget.dataset.id);
-}
+ 
+function GetMultiPlayerCardsLayout(props) {
+  var i;
+   var elem = [];
+   var animated;
+   for (i = 2; i <= props.numberOfPlayers; i++) {
+     if (props.players[i - 1].pid === props.playerTurn) {
+       animated = "animated";
+     } else animated = "";
+     var clsName = props.classMapping[i - 1];
+     var playerName = props.players[i - 1].pname.toUpperCase();
+     var cardArray = [];
+      for(var j=0;j<5;j++)  
+          cardArray.push( <li key={j}>
+           <div className="card back"></div>
+         </li>)
+     elem.push(
+       <div className={clsName}>
+         <div
+           className="playingCards"
+           style={{ display: "inline-block", width: "50%", float: "left" }}
+         >
+           <ul className="deck" >
+              {cardArray}
+            </ul>
+         </div>
+ 
+         <div
+           className={animated}
+           style={{
+             display: "inline-block",
+             width: "45%",
+             float: "right",
+             fontFamily: "cursive",
+           }}
+         >
+           <h4 style={{ margin: "2px" }}>{playerName}</h4>
+           <span className="dot red"></span>
+           <span className="dot green"></span>
+           <span className="dot green"></span>
+           <span className="dot"></span>
+         </div>
+       </div>
+     );
+   }
+   return elem;
+ }
+ 
+ function PlayingZone(props) {
+   var elem = [];
+   var x = 0;
+   var y = 0;
+   var angle = 0;
+   var styleObj;
+ 
+   //var noOf = 24;
+   for (var i = 0; i < props.numberOfCards; i++) {
+     styleObj = {
+       position: "absolute",
+       "WebkitTransform":
+         "translate(" + x + "px, " + y + "px) rotate(" + angle + "deg)",
+       "OTransform":
+         "translate(" + x + "px, " + y + "px) rotate(" + angle + "deg)",
+       transform: "translate(" + x + "px, " + y + "px) rotate(" + angle + "deg)",
+     };
+ 
+     elem.push(<div style={styleObj} className="cardCss backCardCss"></div>);
+     angle = angle + 15;
+     x = x + 1 * 30 * Math.cos((angle * 3.14) / 180);
+     y = y + 1 * 30 * Math.sin((angle * 3.14) / 180);
+   }
+   
+   return (
+     <div className="playingZone">
+       <div className="outerRing">
+         {elem}
+         <div className="cardsNumber">{props.numberOfCards}</div>
+         
+         <div className="cardCss playCard">   
+         <span>Play Card</span>
+              <h2 style={{marginTop: "0px"}}>{props.playCard}</h2>
+            </div>
+         
+       </div>
+     </div>
+   );
+ }
+ 
+ function CardPicker(props){
+ 
+   var elem = [];
+   var x = 0;
+   var y = 0;
+   var angle = 0;
+   var styleObj;
+  
+ 
+   for (var i = 1; i < 14; i++) {
+     styleObj = {
+       position: "absolute",
+       "WebkitTransform":
+         "translate(" + x + "px, " + y + "px) rotate(" + angle + "deg)",
+       "OTransform":
+         "translate(" + x + "px, " + y + "px) rotate(" + angle + "deg)",
+       transform: "translate(" + x + "px, " + y + "px) rotate(" + angle + "deg)",
+     };
+     if(props.playerTurn != props.playerId || props.newMove == false)
+       {
+         styleObj.backgroundColor =  '#EBEBE4'
+         styleObj.pointerEvents = 'none';
+       }
+   
+    var cardRank = ranks[i];
+   elem.push(<div style={styleObj} className="cardCss" data-id={cardRank} onClick={(e)=>{props.action(e)}}><span>{cardRank}</span></div>);
+     angle = angle + (360)/13;
+     x = x + 1 * 35 * Math.cos((angle * 3.14) / 180);
+     y = y + 1 * 35 * Math.sin((angle * 3.14) / 180);
+   }
+  return(
+   <div className="cardSelector">
+      {elem}
+   </div>  
+  )
+ 
+ }
+ 
 
 const mapStateToProps = (state) => {
+  console.log(state);
+  const pid = state.player.pid;
   return {
     gameName: 'hello',
     playerId: state.player.pid,
     gameId: state.game.gameId,
     gameName: state.game.gameName,
     isHost: state.player.isHost,
+    // cardsArray: state.firestore.data.games
+    // ? state.firestore.data.games[state.game.gameId].playerCards 
+    // : null,
+    myCards: state.firestore.data.games
+    ? state.firestore.data.games[state.game.gameId][pid]
+    : null,
     playersArray: state.firestore.data.games
       ? state.firestore.data.games[state.game.gameId].Players
       : null,
@@ -465,10 +565,19 @@ const mapStateToProps = (state) => {
     ? state.firestore.data.games[state.game.gameId].playerTurn
      : null,
     playCard: state.firestore.data.games
-    ? state.firestore.data.games[state.game.gameId].playCard
+    ? state.firestore.data.games[state.game.gameId].rank
      : null, 
     gameCards: state.firestore.data.games
     ? state.firestore.data.games[state.game.gameId].gameCards
+     : null,
+     newMove: state.firestore.data.games
+     ? state.firestore.data.games[state.game.gameId].newMove
+     : null,
+     lastPlayer:  state.firestore.data.games
+     ? state.firestore.data.games[state.game.gameId].lastPlayer
+     : null,
+     bluff: state.firestore.data.games
+     ? state.firestore.data.games[state.game.gameId].bluff
      : null,
   /*  playerId: 'liuzk4',
     playerTurn: 'liuzk4',
@@ -483,11 +592,12 @@ const mapStateToProps = (state) => {
 export default compose(
   firestoreConnect((props) => {
     return [
+    
       {
         collection: "games",
-        doc: props.location.state.gameId,
-      // doc: '5uFn1g415Wn66otuvyJ1'
-      },
+        doc: props.location.state.gameId,    
+      }
+      
     ];
   }),
   connect(mapStateToProps)

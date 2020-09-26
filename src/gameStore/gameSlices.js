@@ -70,10 +70,11 @@ export const HostGameAsync = gameData => (dispatch, getState, {getFirebase, getF
     gameKey: gameData.gameKey,
     gameStarted: false,
     Players:[
-    {   pname: 'parth',
+    {   pname: gameData.pname,
         pid: r
     }
-    ]
+    ],
+    newMove: true
   }
     const firestore = getFirestore();
     firestore.collection('games').add(game).then((doc)=>{

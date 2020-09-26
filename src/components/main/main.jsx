@@ -114,6 +114,7 @@ function Main() {
       HostGameAsync({
         gameName: gameName,
         gameKey: r,
+        pname: playerName
       })
     );
   }
