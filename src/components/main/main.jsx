@@ -128,11 +128,10 @@ function Main() {
           JoinGameAsync({
             gameId: querySnapShot.docs[0].id,
             gameKey: gameKey,
-            gameName: querySnapShot.docs[0].gameName,
+            gameName: querySnapShot.docs[0].data().gameName,
             pname: playerName,
           })
         );
-        console.log(querySnapShot.docs[0].id);
       });
   }
 }

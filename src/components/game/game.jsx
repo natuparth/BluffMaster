@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import firebase from "../../Firebase";
 import { compose } from "redux";
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 import "./game.css";
 import "../../selfthinker-CSS-Playing-Cards-7e0e0f2/cards.css";
 //const dispatch = useDispatch();
@@ -23,7 +25,7 @@ const ranks = {
   13: "K",
 };
 class Game extends React.Component {
-
+  winnerDecided ;
   cardArray = [];
   numberOfPlayers;
   playerId;
@@ -77,49 +79,32 @@ class Game extends React.Component {
     //  {suit: "spades", rank: "Q"},
      
     // ]
-    this.handleCardClick = this.handleCardClick.bind(this);
-    this.moveHandler = this.moveHandler.bind(this);
-    this.passHandler = this.passHandler.bind(this);
-    this.handleCardSelectClick = this.handleCardSelectClick.bind(this);
-    this.challengeHandler = this.challengeHandler.bind(this);
-
+   this.handleCardClick = this.handleCardClick.bind(this);
+   this.moveHandler = this.moveHandler.bind(this);
+   this.passHandler = this.passHandler.bind(this);
+   this.handleCardSelectClick = this.handleCardSelectClick.bind(this);
+   this.challengeHandler = this.challengeHandler.bind(this);
+  
      // for main game
-     console.log(props.playerCards)
-     this.playerTurn = props.playerTurn;
-     for (var i = 0; i < this.numberOfPlayers; i++) {
-       if (this.props.playersArray[i].pid === this.props.playerId) {
-         this.pindex = i;
-         break;
-       }
-     }
-    var playerObj = this.props.playersArray[this.pindex];
-    this.players.push({
-      pid: this.props.playersArray[this.pindex].pid,
-      pname: this.props.playersArray[this.pindex].pname,
-    });
-   
-    for (var j = 1; j < this.numberOfPlayers; j++) {
-       this.players.push({
-        pid: this.props.playersArray[(this.pindex + j) % this.numberOfPlayers]
-          .pid,
-        pname: this.props.playersArray[(this.pindex + j) % this.numberOfPlayers]
-          .pname,
-      });
-    }
-    
+
+
+
+    this.players=this.createPlayersArray(this.props.playersArray, this.props.playerId)
+    this.playerTurn = props.playerTurn;
     console.log(this.players);
    // this.cardArray = Array.from(playerObj.cards);
-    this.cardArray = this.props.myCards;
+  //  this.cardArray = this.props.myCards;
    this.state = {
+     players: this.players,
+     playerCardsFinished: this.props.playerCardsFinished,
       bluff: this.props.bluff,
       lastPlayer: this.props.lastPlayer,
-      pindex: this.pindex,
       playerId: this.props.playerId,
       playCard: this.props.playCard,
       playerTurn: this.props.playerTurn,
       gameCards: this.props.gameCards,
-      cards: this.cardArray,
-      stylesArray: Array(this.cardArray.length).fill({
+      myCards: this.props.myCards,
+      stylesArray: Array(this.props.myCards.length).fill({
         selected: false,
         styles: {
           top: "5em",
@@ -130,12 +115,52 @@ class Game extends React.Component {
     };
   }
   
+  // shouldComponentUpdate(nextProps)
+  // {
+  //   if(this.props.gameCards === nextProps.gameCards)
+  //        return false;
+  // }
+  
   componentDidUpdate(previousState){
-    if(this.props.gameCards != previousState.gameCards)
+    // if(this.props.playerCardsFinished != previousState.playerCardsFinished)
+    //   this.setState({
+    //     playerCardsFinished: this.props.playerCardsFinished
+    //   })
+    if(this.props.myCards !== undefined){
+    if(this.props.myCards !== previousState.myCards){
+      this.setState({
+      myCards: this.props.myCards,
+      playerTurn: this.props.playerTurn,
+      stylesArray: Array(this.props.myCards.length).fill({
+        selected: false,
+        styles: {
+          top: "5em",
+        },
+      }
+      ),
+     })
+    }
+  }
+  if(this.props.playersArray !== previousState.playersArray)
+    {
+      console.log('this checked');
+      var pArray = this.createPlayersArray(this.props.playersArray, this.props.playerId)
+      this.setState({
+      players: pArray
+    })
+    }
+    if(this.props.gameCards !== previousState.gameCards)
+    { 
     this.setState({
       gameCards: this.props.gameCards,
-      bluff: this.props.bluff
+      bluff: this.props.bluff,
+      playCard: this.props.playCard,
+      newMove: this.props.newMove,
+      lastPlayer: this.props.lastPlayer,
+      playerCardsFinished: this.props.playerCardsFinished
     })
+  }
+    /*
     if(this.props.playerTurn != previousState.playerTurn) 
     this.setState({
       playerTurn: this.props.playerTurn,
@@ -152,7 +177,36 @@ class Game extends React.Component {
     this.setState({
       lastPlayer: this.props.lastPlayer,
     })
+    */
    
+  }
+
+  createPlayersArray(playersArray, playerId){
+      var pindex;
+      var players = [];
+      console.log(playersArray);
+      var numberOfPlayers = playersArray.length;
+    for (var i = 0; i < numberOfPlayers; i++) {
+      if (playersArray[i].pid === playerId) {
+       pindex = i;
+        break;
+      }
+    }
+   //var playerObj = this.props.playersArray[this.pindex];
+   players.push({
+     pid: playersArray[pindex].pid,
+     pname: playersArray[pindex].pname,
+   });
+  
+   for (var j = 1; j < numberOfPlayers; j++) {
+     players.push({
+       pid: playersArray[(pindex + j) % numberOfPlayers]
+         .pid,
+       pname: playersArray[(pindex + j) % numberOfPlayers]
+         .pname,
+     });
+   }
+   return players;
   }
   handleCardClick(e) {
     var newArr = this.state.stylesArray;
@@ -186,12 +240,13 @@ class Game extends React.Component {
   } 
 
   moveHandler(playCard) {
-    var tempArr = this.state.cards;
+    console.log('move handler');
+    var tempArr = this.state.myCards;
     var updatedCards = [];
     var stylesArray = this.state.stylesArray;
     var updatedStyles = [];
     var selectedCards = [];
-    for (var i = 0; i < this.state.cards.length; i++) {
+    for (var i = 0; i < this.state.myCards.length; i++) {
       if (stylesArray[i].selected === true) {
         selectedCards.push(tempArr[i]);
       } else {
@@ -200,17 +255,17 @@ class Game extends React.Component {
       }
     }
 
-    if(selectedCards.length == 0){
+    if(selectedCards.length === 0){
      alert('Please select some cards to play');
      return ;
     }
     this.setState({
-      cards: updatedCards,
+      myCards: updatedCards,
       stylesArray: updatedStyles,
     });
     var bluff = false;
     var rank = playCard;
-    if(this.state.newMove == true)
+    if(this.state.newMove === true)
       {
         rank = this.state.cardSelected;
 
@@ -229,26 +284,38 @@ class Game extends React.Component {
 
     };
    cardsObj[pid] = updatedCards;
-   console.log(cardsObj);
+   if(this.state.playerCardsFinished === true)
+    this.winnerHandler(this.state.lastPlayer)
    db.collection('games').doc(this.props.gameId).update({
     ...cardsObj,
     gameCards: firebase.firestore.FieldValue.arrayUnion(...selectedCards),
-    playerTurn: this.players[1].pid,
+    playerTurn: this.state.players[1].pid,
     bluff: bluff,
-    rank: this.state.newMove == true ? rank : playCard,
+    rank: this.state.newMove === true ? rank : playCard,
     newMove: false,
     lastPlayer: this.state.playerId 
    }
    ).then((doc)=>{
-       console.log(doc);
+      if(this.state.playerCardsFinished == true)
+       {
+         this.winnerDecided = true;
+       }
+
+      if(updatedCards.length === 0)
+        { 
+        //  alert('you have won the game');
+          db.collection('games').doc(this.props.gameId).update({
+         //  Players: firebase.firestore.FieldValue.arrayRemove(this.players[0]) ,
+           playerCardsFinished: true 
+        }).catch(err => {
+            console.log(err);
+          })
+        }  
    })
-    console.log(selectedCards);
-    console.log(updatedCards);
-    console.log(updatedStyles);
   }
   passHandler(){
     db.collection('games').doc(this.props.gameId).update({
-      playerTurn: this.players[1].pid,
+      playerTurn: this.state.players[1].pid,
       }
      ).then((doc)=>{
          console.log(doc);
@@ -256,12 +323,12 @@ class Game extends React.Component {
 
   }
   challengeHandler(bluff, lastPlayer){
-    if(bluff == true){
-      var updateObj = {};
+    var updateObj = {};
+    if(bluff === true){  
       updateObj[lastPlayer] = firebase.firestore.FieldValue.arrayUnion(...this.state.gameCards);
       updateObj['gameCards'] = [];
       updateObj['newMove'] = true;
-      alert('your guess was wrong! player has played correct cards')
+      alert('Yayyyy! your guess was correct! player has played wrong cards')
       db.collection('games').doc(this.props.gameId).update(updateObj).then(()=>{
         console.log('cards updated');
       })
@@ -270,13 +337,16 @@ class Game extends React.Component {
     }
 
     else{
-      var updateObj = {};
+   //   var updateObj = {};
       updateObj[this.state.playerId] = firebase.firestore.FieldValue.arrayUnion(...this.state.gameCards);
       updateObj['gameCards'] = [];
       updateObj['newMove'] = true;
       updateObj['playerTurn'] = lastPlayer;
-      alert('Yayy! Your guess was correct! player has played wrong cards')
-      
+      alert('OOPS Your guess was wrong! player has played correct cards')
+      if(this.state.playerCardsFinished === true){
+        this.winnerHandler(this.state.lastPlayer)
+        updateObj['playerTurn'] = this.state.playerId;
+      }
       db.collection('games').doc(this.props.gameId).update(updateObj).then(()=>{
         console.log('cards updated');
       })
@@ -285,7 +355,33 @@ class Game extends React.Component {
 
 
   }
+
+winnerHandler(winnerId){
+  console.log(winnerId);
+     var pObj = this.state.players.filter(player => player.pid === winnerId)
+    const pObject = {
+      pname: pObj[0].pname,
+      pid: pObj[0].pid
+    }
+    console.log(pObj[0]);
+  db.collection('games').doc(this.props.gameId).update({
+      Players: firebase.firestore.FieldValue.arrayRemove(pObj[0]),
+      playerCardsFinished: false 
+   }).catch(err => {
+       console.log(err);
+     }) 
+}
+
   render() {
+    
+    console.log('rendered');
+    if(!this.state.myCards)
+      return false;
+    if(this.state.lastPlayer === this.state.playerId && this.state.myCards.length === 0 && this.state.bluff === false)
+    {
+      alert('congratulations you have won the game')
+      this.winnerHandler(this.state.playerId);
+    }  
     const items = [];
     var i = 0;
     var myTurn = false;
@@ -294,9 +390,11 @@ class Game extends React.Component {
      {
         player1Class = "player_1 animated";
         myTurn = true;
+     //   if(this.state.playerCardsFinished === true)
+       //     alert('the last player is about to finish! Do you want to challenge?')
       }
-        for (i = 0; i < this.state.cards.length; i++) {
-      var obj = this.state.cards[i];
+        for (i = 0; i < this.state.myCards.length; i++) {
+      var obj = this.state.myCards[i];
       var cardClass = "card rank-" + obj.rank + " " + obj.suit;
       var elem = this.getSuitSymbol(obj.suit);
       items.push(
@@ -317,13 +415,14 @@ class Game extends React.Component {
     return (
       <div className="Game_container">
         <GetMultiPlayerCardsLayout
-          players={this.players}
+          players={this.state.players}
           classMapping={this.classMapping}
-          numberOfPlayers={this.numberOfPlayers}
           playerTurn={this.state.playerTurn}
+          lastPlayer={this.state.lastPlayer}
+          playerCardsFinished = {this.state.playerCardsFinished}
         ></GetMultiPlayerCardsLayout>
         <PlayingZone numberOfCards={this.state.gameCards.length} playCard={this.state.playCard}></PlayingZone>
-
+        <Popup  trigger={this.winnerDecided}> <span>Winner Decided</span></Popup>
         <div className={player1Class}>
           <CardPicker playerTurn={this.state.playerTurn} playerId={this.props.playerId} newMove={this.state.newMove} 
           action = {this.handleCardSelectClick}
@@ -418,13 +517,17 @@ class Game extends React.Component {
 }
  
 function GetMultiPlayerCardsLayout(props) {
+  var numberOfPlayers = props.players.length;
   var i;
    var elem = [];
    var animated;
-   for (i = 2; i <= props.numberOfPlayers; i++) {
+   for (i = 2; i <= numberOfPlayers; i++) {
      if (props.players[i - 1].pid === props.playerTurn) {
        animated = "animated";
      } else animated = "";
+
+     if(props.playerCardsFinished === true && props.lastPlayer === props.players[i-1].pid)
+        animated = "danger";
      var clsName = props.classMapping[i - 1];
      var playerName = props.players[i - 1].pname.toUpperCase();
      var cardArray = [];
@@ -482,7 +585,7 @@ function GetMultiPlayerCardsLayout(props) {
        transform: "translate(" + x + "px, " + y + "px) rotate(" + angle + "deg)",
      };
  
-     elem.push(<div style={styleObj} className="cardCss backCardCss"></div>);
+     elem.push(<div style={styleObj} key={i} className="cardCss backCardCss"></div>);
      angle = angle + 15;
      x = x + 1 * 30 * Math.cos((angle * 3.14) / 180);
      y = y + 1 * 30 * Math.sin((angle * 3.14) / 180);
@@ -522,7 +625,7 @@ function GetMultiPlayerCardsLayout(props) {
          "translate(" + x + "px, " + y + "px) rotate(" + angle + "deg)",
        transform: "translate(" + x + "px, " + y + "px) rotate(" + angle + "deg)",
      };
-     if(props.playerTurn != props.playerId || props.newMove == false)
+     if(props.playerTurn !== props.playerId || props.newMove === false)
        {
          styleObj.backgroundColor =  '#EBEBE4'
          styleObj.pointerEvents = 'none';
@@ -544,10 +647,9 @@ function GetMultiPlayerCardsLayout(props) {
  
 
 const mapStateToProps = (state) => {
-  console.log(state);
   const pid = state.player.pid;
   return {
-    gameName: 'hello',
+   // gameName: 'hello',
     playerId: state.player.pid,
     gameId: state.game.gameId,
     gameName: state.game.gameName,
@@ -555,6 +657,9 @@ const mapStateToProps = (state) => {
     // cardsArray: state.firestore.data.games
     // ? state.firestore.data.games[state.game.gameId].playerCards 
     // : null,
+    playerCardsFinished: state.firestore.data.games
+    ? state.firestore.data.games[state.game.gameId].playerCardsFinished
+    : null,
     myCards: state.firestore.data.games
     ? state.firestore.data.games[state.game.gameId][pid]
     : null,

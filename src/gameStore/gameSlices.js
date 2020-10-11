@@ -74,6 +74,7 @@ export const HostGameAsync = gameData => (dispatch, getState, {getFirebase, getF
         pid: r
     }
     ],
+    playerCardsFinished: false,
     newMove: true
   }
     const firestore = getFirestore();

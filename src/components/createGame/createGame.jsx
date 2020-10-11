@@ -32,7 +32,7 @@ const suits = {
   3: "hearts",
   0: "clubs",
 };
- function CreateGame({gameId,gameName,isHost, playersArray, gameStarted}) {
+ function CreateGame({gameKey,gameId,gameName,isHost, playersArray, gameStarted}) {
   
   if(gameStarted === true){
     historyarr.push('/game',{gameId: gameId});
@@ -47,6 +47,7 @@ const suits = {
     
      <Players players={playersArray}/>
       <div className='game_properties_container'>
+      <h3>{gameKey}</h3> 
       <h3>{gameName}</h3>
       <br/>
       <NumberOfDecks />
@@ -220,6 +221,7 @@ for(i=1;i<=players;i++)
 const mapStateToProps = (state) => {
  
   return ({
+    gameKey: state.game.gameKey,
      gameId: state.game.gameId,
      gameName: state.game.gameName,
      isHost: state.player.isHost,
