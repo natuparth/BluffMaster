@@ -32,6 +32,7 @@ const suits = {
   3: "hearts",
   0: "clubs",
 };
+
  function CreateGame({gameKey,gameId,gameName,isHost, playersArray, gameStarted}) {
   
   if(gameStarted === true){
@@ -42,19 +43,23 @@ const suits = {
   const [numberOfLifeLines, setNumberOfLifeLines] = useState(3);
   const numberOfPlayers = playersArray?playersArray.length:0;
   
+  function onSiteChanged(e){
+    setNumberOfDecks(e.currentTarget.value);
+    console.log(e.currentTarget.value)
+  }
   return (
     <div className='Game_container1'>
     
      <Players players={playersArray}/>
       <div className='game_properties_container'>
-      <h3>{gameKey}</h3> 
-      <h3>{gameName}</h3>
+      <div className="gameKeyBox"><span>{gameKey}</span></div> 
+      {/* <div className="gameNameBox">{gameName}</div> */}
       <br/>
       <NumberOfDecks />
       <br/>
-      <NumberOfLifeLines />
+      {/* <NumberOfLifeLines /> */}
       <br/>
-      <button className="big-button" onClick={()=>startGameHandler(numberOfDecks,numberOfPlayers,gameId)} disabled={isPlayerHost}>
+      <button className="big-button" onClick={()=>startGameHandler(numberOfDecks,numberOfPlayers,gameId)} >
         Start Game
       </button>
       </div>
@@ -65,7 +70,7 @@ const suits = {
    var i ;
    if(props.players &&props.players.length >0){
    for(i=0;i<props.players.length;i++){
-    elem.push(<li className="game" key={props.players[i].pname}><span>{props.players[i].pname}</span></li>);
+    elem.push(<li key={props.players[i].pname}><span style={{color: 'turquoise'}}>{props.players[i].pname}</span></li>);
    }
   }
 
@@ -74,19 +79,20 @@ const suits = {
   const nodeRef3 = React.useRef(null);
     return (
       <div className='player_container'>
-       <h2>
-      Waiting for Players
+       <h2 className="textClass">
+     <span > Waiting for Players </span>
         <Dot nodeRef={nodeRef1}>.</Dot>
         <Dot nodeRef={nodeRef2}>.</Dot>
         <Dot nodeRef={nodeRef3}>.</Dot>
       </h2>
-        <ul className="game">
+        <ul className="playersList" >
          {elem}
         </ul>
       </div>
     );
   }
-
+ 
+  
   function NumberOfDecks() {
     var elem = [];
     var i = 0;
@@ -94,16 +100,99 @@ const suits = {
       var item = <option key={i}  value={i}>{i}</option>;
       elem.push(item);
     }
+    var cardArray = [];
+    for(var j=0;j<3;j++)  
+        cardArray.push( <li key={j}>
+         <div className="cardSmall back"></div>
+       </li>)
     return (
-      <div>
-        <label htmlFor="DeckSelector">Number Of Decks</label>
+      <div className="deckSelector">
+        {/* <label htmlFor="DeckSelector">Number Of Decks</label>
         <select
           value={numberOfDecks}
           id="DeckSelector"
           onChange={(event) => setNumberOfDecks(event.target.value)}
         >
           {elem}
-        </select>
+        </select> */}
+       <div className="partition">
+         <div
+           className="playingCards"
+           style={{ display: "inline-block",float: "left"  }}
+         >
+           <ul className="deck" >
+              {cardArray}
+            </ul>
+         </div>
+         </div>
+         <div className="partition">
+          <div
+           className="playingCards"
+           style={{ display: "inline-block", float: "left" }}
+         >
+           <ul className="deck" >
+              {cardArray}
+            </ul>
+            
+         </div>
+
+         <div
+           className="playingCards"
+           style={{ display: "inline-block" ,transform: 'translate(20px,10px)', float: "left"}}
+         >
+           <ul className="deck" >
+              {cardArray}
+            </ul>
+            
+         </div>
+         </div>
+         <div className="partition" style={{float:"left"}}>
+           <div
+           className="playingCards"
+           style={{ display: "inline-block", float: "left"  }}
+         >
+           <ul className="deck" >
+              {cardArray}
+            </ul>
+            
+         </div>
+
+         <div
+           className="playingCards twoDecks"
+           style={{ display: "inline-block" ,transform: 'translate(20px,10px)', float: "left" }}
+         >
+           <ul className="deck" >
+              {cardArray}
+            </ul>
+            
+         </div>
+         <div
+           className="playingCards twoDecks"
+           style={{ display: "inline-block" ,transform: 'translate(40px,20px)', float: "left" }}
+         >
+           <ul className="deck" >
+              {cardArray}
+            </ul>
+            
+         </div>
+         </div>
+         <div style={{width: '100%'}}>
+         <div className="partition" >  
+         <input type="radio" value="1" name="gender" style={{float:"left"}} 
+        onChange={onSiteChanged}
+         />
+         </div> 
+         <div className="partition">  
+         <input type="radio" value="2" name="gender" style={{float:"left"}}
+         onChange={onSiteChanged}
+         />
+         </div>
+         <div className="partition">  
+         <input type="radio" value="3" name="gender" style={{float:"left"}}
+         onChange={onSiteChanged}
+         />
+         </div>
+         </div>
       </div>
     );
   }
@@ -130,7 +219,9 @@ const suits = {
   }
   
   function startGameHandler(numberOfDecks, numberOfPlayers, gameId) {
+    console.log(numberOfDecks);
     var playerCards = DistributeCards(numberOfDecks,numberOfPlayers);
+    console.log(playerCards)
     var docRef = db.collection('games').doc(gameId);
     docRef.get().then((documentsnapshot)=>{
      var newArray=documentsnapshot.data().Players
@@ -145,17 +236,19 @@ const suits = {
                 
        })
  
-    // var batch = db.batch();
-    // console.log(newArray);
-    //  for(var i=0;i<newArray.length;i++){   
-    //   var collRef = docRef.collection('playerCards').doc(newArray[i].pid);
-    //   batch.set(collRef,{cards: playerCards[i].cards})
-    // }
    
 
     var playerTurn = Math.floor(Math.random() * newArray.length);
-      
-     db.collection('games').doc(gameId).update(
+     
+      console.log(newArray[playerTurn].pid)
+      var obj = {
+        gameStarted: true,
+        Players: newArray,
+        playerTurn: newArray[playerTurn].pid,
+        ...cardDist
+      }
+      console.log(obj);
+    db.collection('games').doc(gameId).update(
        {
          gameStarted: true,
          Players: newArray,
@@ -163,13 +256,11 @@ const suits = {
          ...cardDist
        }
      ).then(()=>{
-     // await batch.commit()
-     // console.log('write successful')
-       historyarr.push('/game',{gameId: gameId});
+         historyarr.push('/game',{gameId: gameId});
            
      })
      
-   
+  
     })
     
    }
@@ -179,7 +270,8 @@ const suits = {
 function DistributeCards (numberOfDecks, players){
   var PlayerData = []
   var newArr = [...Array(53).keys()].slice(1);
-  var arr = [].concat(...Array(numberOfDecks).fill(newArr));
+  console.log(newArr)
+  var arr = [].concat(...Array(parseInt(numberOfDecks)).fill(newArr));
   var n = numberOfDecks * 52,
     i,
     temp;

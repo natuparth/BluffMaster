@@ -25,7 +25,6 @@ const ranks = {
   13: "K",
 };
 class Game extends React.Component {
-  winnerDecided ;
   cardArray = [];
   numberOfPlayers;
   playerId;
@@ -89,13 +88,14 @@ class Game extends React.Component {
 
 
 
-    this.players=this.createPlayersArray(this.props.playersArray, this.props.playerId)
+    this.players=this.createPlayersArray(this.props.playersArray, this.props.playerId, this.props.playerName)
     this.playerTurn = props.playerTurn;
     console.log(this.players);
    // this.cardArray = Array.from(playerObj.cards);
   //  this.cardArray = this.props.myCards;
    this.state = {
      players: this.players,
+     pname: this.props.pname,
      playerCardsFinished: this.props.playerCardsFinished,
       bluff: this.props.bluff,
       lastPlayer: this.props.lastPlayer,
@@ -111,7 +111,8 @@ class Game extends React.Component {
         },
       }),
       newMove: this.props.newMove,
-      cardSelected: 'none'
+      cardSelected: 'none',
+      winnerDecided: this.props.winnerDecided
     };
   }
   
@@ -144,9 +145,11 @@ class Game extends React.Component {
   if(this.props.playersArray !== previousState.playersArray)
     {
       console.log('this checked');
-      var pArray = this.createPlayersArray(this.props.playersArray, this.props.playerId)
+      var pArray = this.createPlayersArray(this.props.playersArray, this.props.playerId, this.props.playerName)
       this.setState({
-      players: pArray
+      players: pArray,
+      winnerDecided: this.props.winnerDecided,
+      gameWinner: this.props.gameWinner
     })
     }
     if(this.props.gameCards !== previousState.gameCards)
@@ -181,23 +184,30 @@ class Game extends React.Component {
    
   }
 
-  createPlayersArray(playersArray, playerId){
+  createPlayersArray(playersArray, playerId,playerName){
       var pindex;
       var players = [];
       console.log(playersArray);
       var numberOfPlayers = playersArray.length;
-    for (var i = 0; i < numberOfPlayers; i++) {
+      var i;
+      for (i = 0; i < numberOfPlayers; i++) {
       if (playersArray[i].pid === playerId) {
        pindex = i;
         break;
       }
     }
+    if(i == numberOfPlayers)
+      {
+        pindex = -1;  
+        numberOfPlayers = numberOfPlayers + 1;   
+      }
    //var playerObj = this.props.playersArray[this.pindex];
    players.push({
-     pid: playersArray[pindex].pid,
-     pname: playersArray[pindex].pname,
+     pid: playerId,
+     pname: playerName
    });
-  
+   console.log(pindex);
+   console.log(playersArray)
    for (var j = 1; j < numberOfPlayers; j++) {
      players.push({
        pid: playersArray[(pindex + j) % numberOfPlayers]
@@ -284,42 +294,50 @@ class Game extends React.Component {
 
     };
    cardsObj[pid] = updatedCards;
-   if(this.state.playerCardsFinished === true)
-    this.winnerHandler(this.state.lastPlayer)
-   db.collection('games').doc(this.props.gameId).update({
-    ...cardsObj,
-    gameCards: firebase.firestore.FieldValue.arrayUnion(...selectedCards),
-    playerTurn: this.state.players[1].pid,
-    bluff: bluff,
-    rank: this.state.newMove === true ? rank : playCard,
-    newMove: false,
-    lastPlayer: this.state.playerId 
+   var time = 0;
+   if(this.state.playerCardsFinished === true){
+     this.winnerHandler(this.state.lastPlayer)
+     time = 5000;
    }
-   ).then((doc)=>{
-      if(this.state.playerCardsFinished == true)
-       {
-         this.winnerDecided = true;
+    var playerCardsFinished = (updatedCards.length === 0) ? true: false;  
+    var self = this;
+    setTimeout(function(){
+      console.log(self.props.gameId)
+      db.collection('games').doc(self.props.gameId).update({
+        ...cardsObj,
+        gameCards: firebase.firestore.FieldValue.arrayUnion(...selectedCards),
+        playerTurn: self.state.players[1].pid,
+        bluff: bluff,
+        rank: self.state.newMove === true ? rank : playCard,
+        newMove: false,
+        lastPlayer: self.state.playerId ,
+        playerCardsFinished: playerCardsFinished,
+        winnerDecided: false
        }
-
-      if(updatedCards.length === 0)
-        { 
-        //  alert('you have won the game');
-          db.collection('games').doc(this.props.gameId).update({
-         //  Players: firebase.firestore.FieldValue.arrayRemove(this.players[0]) ,
-           playerCardsFinished: true 
-        }).catch(err => {
-            console.log(err);
-          })
-        }  
-   })
+       )
+    },time)
+   
   }
   passHandler(){
-    db.collection('games').doc(this.props.gameId).update({
-      playerTurn: this.state.players[1].pid,
-      }
-     ).then((doc)=>{
-         console.log(doc);
-     })
+    var updateObj = {};
+    if(this.state.winnerDecided === true && this.state.gameWinner === this.state.players[1].pid){
+      updateObj.playerTurn = this.state.players[2].pid;
+      this.winnerHandler(this.state.players[1].pid)
+    }
+    else
+     updateObj.playerTurn = this.state.players[1].pid
+     
+    setTimeout(function(){
+      db.collection('games').doc(this.props.gameId).update({
+        playerTurn: this.state.players[1].pid,
+        winnerDecided: false
+        }
+       ).then((doc)=>{
+         
+        console.log(doc);
+      })
+    },5000)
+  
 
   }
   challengeHandler(bluff, lastPlayer){
@@ -332,8 +350,6 @@ class Game extends React.Component {
       db.collection('games').doc(this.props.gameId).update(updateObj).then(()=>{
         console.log('cards updated');
       })
- 
-
     }
 
     else{
@@ -346,10 +362,14 @@ class Game extends React.Component {
       if(this.state.playerCardsFinished === true){
         this.winnerHandler(this.state.lastPlayer)
         updateObj['playerTurn'] = this.state.playerId;
+        updateObj['winnerDecided'] = false;
       }
-      db.collection('games').doc(this.props.gameId).update(updateObj).then(()=>{
-        console.log('cards updated');
-      })
+      setTimeout(function(){
+        db.collection('games').doc(this.props.gameId).update(updateObj).then(()=>{
+          console.log('cards updated');
+        })
+      }, 5000)
+      
     }
 
 
@@ -359,13 +379,13 @@ class Game extends React.Component {
 winnerHandler(winnerId){
   console.log(winnerId);
      var pObj = this.state.players.filter(player => player.pid === winnerId)
-    const pObject = {
-      pname: pObj[0].pname,
-      pid: pObj[0].pid
-    }
+    
     console.log(pObj[0]);
   db.collection('games').doc(this.props.gameId).update({
       Players: firebase.firestore.FieldValue.arrayRemove(pObj[0]),
+      winnerDecided: true,
+      winners: firebase.firestore.FieldValue.arrayUnion(pObj[0]),
+      gameWinner: pObj[0].pid,
       playerCardsFinished: false 
    }).catch(err => {
        console.log(err);
@@ -373,15 +393,9 @@ winnerHandler(winnerId){
 }
 
   render() {
-    
     console.log('rendered');
     if(!this.state.myCards)
-      return false;
-    if(this.state.lastPlayer === this.state.playerId && this.state.myCards.length === 0 && this.state.bluff === false)
-    {
-      alert('congratulations you have won the game')
-      this.winnerHandler(this.state.playerId);
-    }  
+      return false;  
     const items = [];
     var i = 0;
     var myTurn = false;
@@ -393,7 +407,7 @@ winnerHandler(winnerId){
      //   if(this.state.playerCardsFinished === true)
        //     alert('the last player is about to finish! Do you want to challenge?')
       }
-        for (i = 0; i < this.state.myCards.length; i++) {
+      for (i = 0; i < this.state.myCards.length; i++) {
       var obj = this.state.myCards[i];
       var cardClass = "card rank-" + obj.rank + " " + obj.suit;
       var elem = this.getSuitSymbol(obj.suit);
@@ -414,6 +428,9 @@ winnerHandler(winnerId){
 
     return (
       <div className="Game_container">
+        <Popup open={this.state.winnerDecided}>
+    <div>Player {this.state.gameWinner} has won the game</div>
+        </Popup>
         <GetMultiPlayerCardsLayout
           players={this.state.players}
           classMapping={this.classMapping}
@@ -651,6 +668,7 @@ const mapStateToProps = (state) => {
   return {
    // gameName: 'hello',
     playerId: state.player.pid,
+    playerName: state.player.pname,
     gameId: state.game.gameId,
     gameName: state.game.gameName,
     isHost: state.player.isHost,
@@ -684,6 +702,12 @@ const mapStateToProps = (state) => {
      bluff: state.firestore.data.games
      ? state.firestore.data.games[state.game.gameId].bluff
      : null,
+     winnerDecided: state.firestore.data.games
+     ? state.firestore.data.games[state.game.gameId].winnerDecided
+     : null,
+     gameWinner: state.firestore.data.games
+     ? state.firestore.data.games[state.game.gameId].gameWinner
+     : null
   /*  playerId: 'liuzk4',
     playerTurn: 'liuzk4',
     playCard: 'J',

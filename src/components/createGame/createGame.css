@@ -71,11 +71,12 @@ button {
   .Game_container1{
     padding : 2%;
     max-width:100% ;
-   height: 550px; 
-      background-color: rgb(240, 235, 235);
+   height: 550px;
+   padding: 0;
+      background-color: rgb(17, 19, 17);
       display: grid;
       border: 2px solid red;
-      grid-template-columns: 50% 50%;
+      grid-template-columns: 33% 33% 33%;
       grid-template-rows: 22% 22% 22% 34%;
     }
 
@@ -84,13 +85,15 @@ button {
       grid-column-end: 1;
       grid-row-start: 1;
       grid-row-end: 5;
-      background-color: rgb(184, 212, 184);
+      background-color: rgb(17, 19, 17);
     }
     .game_properties_container{
      grid-column-start: 2;
+     grid-column-end: 2;
      grid-row-start: 1;
      grid-row-end: 5;
-     background-color: rgb(184, 212, 184);
+     background-color: rgb(17, 19, 17);
+     text-align: center;
 
     }
     ul.game{
@@ -103,3 +106,136 @@ button {
       border-bottom-style: ridge;
       border: saddlebrown solid 1px;
     }
+    /* List */
+.playersList ul {
+  counter-reset: index;  
+  padding: 0;
+  max-width: 300px;
+}
+
+/* List element */
+.playersList li {
+  counter-increment: index; 
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  box-sizing: border-box;
+}
+
+
+/* Element counter */
+.playersList li::before {
+  content: counters(index, ".", decimal-leading-zero);
+  font-size: 1.5rem;
+  text-align: right;
+  font-weight: bold;
+  min-width: 50px;
+  padding-right: 12px;
+  font-variant-numeric: tabular-nums;
+  align-self: flex-start;
+  background-image: linear-gradient(to bottom, aquamarine, orangered);
+  background-attachment: fixed;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* Element separation */
+.playersList li + li {
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+@use postcss-preset-env {
+  stage: 0;
+  autoprefixer: {
+    grid: true;
+  }
+  browsers: last 2 versions
+}
+
+.textClass {
+  font-family: 'Courier New', Courier, monospace;
+  color: rgb(202, 136, 51);
+}
+.gameNameBox{
+  background-color: rgb(235, 55, 55);
+  width: 15em;
+  height: 4em;
+  border-radius: 5% 40%;
+  text-align: center;
+  margin: 0%;
+
+}
+.gameKeyBox{
+  background-color: rgb(235, 55, 55);
+  width: 15em;
+  height: 4em;
+  line-height: 4em;
+  border-radius: 5%;
+  text-align: center;
+  margin: auto;
+  margin-top: 5em;
+ 
+
+}
+.gameKeyBox span{
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 25px;
+  color: aliceblue;
+}
+
+.deckSelector{
+
+  width: 100%;
+  height: 9em;
+
+}
+
+.twoDecks{
+  display: "inline-block";
+  /* width: "25%";
+  float: "left";  */
+}
+
+.playingCards .cardSmall {
+  display: inline-block;
+  width: 1.5em;
+  height: 2.8em;
+  border: 1px solid #666;
+  border-radius: .3em;
+  -moz-border-radius: .3em;
+  -webkit-border-radius: .3em;
+  -khtml-border-radius: .3em;
+  padding: .25em;
+  margin: 0 .5em .5em 0;
+  text-align: center;
+  font-size: 1.2em; /* @change: adjust this value to make bigger or smaller cards */
+  font-weight: normal;
+  font-family: Arial, sans-serif;
+  position: relative;
+  background-color: #fff;
+  -moz-box-shadow: .2em .2em .5em #333;
+  -webkit-box-shadow: .2em .2em .5em #333;
+  box-shadow: .2em .2em .5em #333;
+}
+
+.playingCards .back {
+  text-indent: -4000px;
+  background-color: #ccc;
+  background-repeat: repeat;
+  background-image: url(data:image/gif;base64,R0lGODlhJAAkAJEAAOjFsezdztOKbL5QKCH5BAAAAAAALAAAAAAkACQAAAL/HC4RAqm/mmLHyHmAbczB11Ea8ombJKSgKo6Z17pXFznmS1JptiX0z3vVhpEKDoUIkoa0olGIUeZUk1RI6Yn2mh/FDAt6frOrRRTqXPpsVLYugzxaVy+YcBdnoWPZOT0E4eckQtZFZBjWoHixQFWl6Nhol6R2p1Okt5TGaEWZA6fjiMdhZgPHeWrTWGVq+jTZg1HYyAEWKLYzmyiGKoUimilz+YYryyTlg5RcDJSAbNx0Q7lMcbIGEyzTK8zVdfVaImzs/QV+prYqWWW2ObkoOApM/Em/rUlIm7fijs8a2EEKEaZ3AsMUgneEU6RcpJbZ27aGHkAO2Ors8xQH1IR0Bn5YnOtVAAA7); /* image is "Pattern 069" from http://www.squidfingers.com/patterns/ */
+  /* background-image: -moz-repeating-linear-gradient(34% 6% 135deg,#0F1E59, #75A1BF, #3E3E63 50%);
+  background-image: -webkit-gradient(radial, center center, 20, center center, 80, from(#3c3), color-stop(0.4, #363), to(#030)); */
+  /* yes, it's intentional that Mozilla, Webkit, Opera and IE all will get different backgrounds ... why not? :) */
+}
+
+.partition{
+  width: 33%;
+  float: left;
+}
+
+input[type=radio] {
+  border: 0px;
+  width: 100%;
+  height: 2em;
+}
