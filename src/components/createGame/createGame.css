@@ -168,13 +168,15 @@ button {
 }
 .gameKeyBox{
   background-color: rgb(235, 55, 55);
-  width: 15em;
-  height: 4em;
-  line-height: 4em;
+  width: 100%;
   border-radius: 5%;
   text-align: center;
   margin: auto;
-  margin-top: 5em;
+  margin-top: 1em;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 50% 50%;
+  font-family: 'Courier New', Courier, monospace;
  
 
 }
@@ -184,6 +186,20 @@ button {
   color: aliceblue;
 }
 
+.gameKeyBox .div1 {
+  font-size: 25px;
+  color: black;
+  padding: 5%;
+  grid-row-start: 1;
+  grid-column-start: 1;
+}
+.gameKeyBox .div2 {
+  font-size: 35px;
+  color: aliceblue;
+  padding: 2%;
+  grid-row-start: 2;
+  grid-column-start: 1;
+}
 .deckSelector{
 
   width: 100%;
@@ -238,4 +254,8 @@ input[type=radio] {
   border: 0px;
   width: 100%;
   height: 2em;
+}
+
+.w100{
+  width: 100%;
 }

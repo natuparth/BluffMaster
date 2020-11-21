@@ -34,7 +34,7 @@ export default class App extends React.Component {
     <div className="App App-header">
       <Header/>
      </div> 
-    <div style={ {width:"100vw", height:"82vh"} }>  
+    <div style={ {width:"100vw", height:"85vh"} }>  
       <Switch>
        <Route exact path="/" component={Main}/>
       {/* <Route exact path="/" component={CreateGame}/> */}

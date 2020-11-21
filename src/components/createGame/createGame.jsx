@@ -1,6 +1,7 @@
 import React from "react";
 import { Dot } from 'react-animated-dots';
 import firebase from "../../Firebase";
+import {ranks, suits} from  "../globals/globalVariables";
 import { useState } from "react";
 import { connect } from "react-redux";
 import { firestoreConnect} from 'react-redux-firebase';
@@ -10,28 +11,7 @@ import './createGame.css';
 
 const db = firebase.firestore();
 const historyarr = history;
-const ranks = {
-  1: "A",
-  2: "2",
-  3: "3",
-  4: "4",
-  5: "5",
-  6: "6",
-  7: "7",
-  8: "8",
-  9: "9",
-  10: "10",
-  11: "J",
-  12: "Q",
-  0: "K",
-};
 
-const suits = {
-  1: "spades",
-  2: "diams",
-  3: "hearts",
-  0: "clubs",
-};
 
  function CreateGame({gameKey,gameId,gameName,isHost, playersArray, gameStarted}) {
   
@@ -52,7 +32,9 @@ const suits = {
     
      <Players players={playersArray}/>
       <div className='game_properties_container'>
-      <div className="gameKeyBox"><span>{gameKey}</span></div> 
+      <div className="gameKeyBox">
+        <div className="div1" style={{background: 'antiquewhite'}}>Game Code</div>
+        <div className="div2">{gameKey}</div></div> 
       {/* <div className="gameNameBox">{gameName}</div> */}
       <br/>
       <NumberOfDecks />
@@ -309,6 +291,8 @@ for(i=1;i<=players;i++)
 
   return PlayerData;
 };
+
+
 
 const mapStateToProps = (state) => {
  
