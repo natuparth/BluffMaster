@@ -2,11 +2,13 @@ import React from 'react';
 import './header.css';
 
 
+
 function Header(){
+ 
   return (
-
-  <h2> Welcome to BluffMaster</h2>
-
+  <div>
+    <h2> Welcome To BluffMaster</h2>
+  </div>
   )
 
 }

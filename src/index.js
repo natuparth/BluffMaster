@@ -1,12 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {persistor,store ,history} from './gameStore/gameStore';
+import {Provider} from 'react-redux';
 import './index.css';
 import App from '../src/components/app/App';
 import * as serviceWorker from './serviceWorker';
+import { ConnectedRouter } from 'connected-react-router';
+import { PersistGate } from 'redux-persist/integration/react'
+
+
+
+
 
 ReactDOM.render(
   <React.StrictMode>
+    <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+    <ConnectedRouter history={history}>  
     <App />
+    </ConnectedRouter>
+    </PersistGate>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
