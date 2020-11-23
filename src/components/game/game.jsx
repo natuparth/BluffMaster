@@ -364,6 +364,13 @@ class Game extends React.Component {
         return [];
     }
   }
+  getPlayerNameFromId(playerId){
+    console.log(playerId)
+    console.log(this.state.players);
+    if(playerId === "" || playerId === undefined || playerId === null)
+     return " ";
+  return  this.state.players.filter(pobj => pobj.pid === playerId)[0].pname
+  }
   render() {
     console.log("rendered");
     if (!this.state.myCards) return false;
@@ -401,7 +408,7 @@ class Game extends React.Component {
     return (
       <div className="Game_container">
         <Popup open={this.state.winnerDecided}>
-          <div>Player {this.state.gameWinner} has won the game</div>
+          <div> {this.getPlayerNameFromId(this.state.gameWinner)} has won the game</div>
         </Popup>
         <PlayerLayout
           players={this.state.players}
