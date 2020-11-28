@@ -134,16 +134,4 @@ export const JoinGameAsync = gameData => (dispatch, getState, {getFirebase, getF
 
 }
 
-// export const MakeAMove = gameData => (getFirestore) => {
-//     const firestore = getFirestore();
-//     firestore.collection('games').doc(gameData.gameId).update({
-//      gameCards: firestore.FieldValue.arrayUnion(gameData.gameCards),
-//      playerTurn: gameData.playerTurn,
-//      bluff: gameData.bluff
-//     }
-//     ).then((doc)=>{
-//         console.log(doc);
-//     })
 
-//
-//}

@@ -6,7 +6,9 @@ import { compose } from "redux";
 import { CardPicker } from "./cardselector";
 import { PlayerLayout } from "./playerlayout";
 import { PlayingZone } from "./playingzone";
+import { Winners } from './winners'
 import Popup from "reactjs-popup";
+import {history} from '../../gameStore/gameStore';
 import "reactjs-popup/dist/index.css";
 import "./game.css";
 import "../../selfthinker-CSS-Playing-Cards-7e0e0f2/cards.css";
@@ -59,6 +61,7 @@ class Game extends React.Component {
       newMove: this.props.newMove,
       cardSelected: " ",
       winnerDecided: this.props.winnerDecided,
+      winners: this.props.winners
     };
   }
 
@@ -88,6 +91,7 @@ class Game extends React.Component {
         players: pArray,
         winnerDecided: this.props.winnerDecided,
         gameWinner: this.props.gameWinner,
+        winners: this.props.winners
       });
     }
     if (this.props.gameCards !== previousState.gameCards) {
@@ -211,8 +215,14 @@ class Game extends React.Component {
     var playerCardsFinished = updatedCards.length === 0 ? true : false;
     var self = this;
     setTimeout(function () {
-      console.log(self.props.gameId);
-      db.collection("games")
+     // console.log(self.props.gameId);
+     
+     if(self.state.players.length < 1)
+       {
+         alert('game has ended')
+         history.pushState({url: 'localhost:3000' })
+       }
+     db.collection("games")
         .doc(self.props.gameId)
         .update({
           ...cardsObj,
@@ -366,10 +376,10 @@ class Game extends React.Component {
   }
   getPlayerNameFromId(playerId){
     console.log(playerId)
-    console.log(this.state.players);
+    console.log(this.state.winners);
     if(playerId === "" || playerId === undefined || playerId === null)
      return " ";
-  return  this.state.players.filter(pobj => pobj.pid === playerId)[0].pname
+  return  this.state.winners.filter(pobj => pobj.pid === playerId)[0].pname
   }
   render() {
     console.log("rendered");
@@ -425,6 +435,7 @@ class Game extends React.Component {
           {" "}
           <span>Winner Decided</span>
         </Popup>
+        <Winners winners = {this.state.winners}></Winners>
         <div className={player1Class}>
           <CardPicker
             playerTurn={this.state.playerTurn}
@@ -433,6 +444,7 @@ class Game extends React.Component {
             cardSelected={this.state.cardSelected}
             action={this.handleCardSelectClick}
           ></CardPicker>
+        
           <div
             className="playingCards fourColours faceImages"
             style={{ marginLeft: "20%" }}
@@ -482,6 +494,11 @@ class Game extends React.Component {
 
 const mapStateToProps = (state) => {
   const pid = state.player.pid;
+  console.log(state);
+  if(state.firestore.data.games === undefined)
+   state = JSON.parse(localStorage.getItem('stateValue'));
+  else
+  localStorage.setItem('stateValue', JSON.stringify(state))
   return {
     // gameName: 'hello',
     playerId: state.player.pid,
@@ -525,6 +542,9 @@ const mapStateToProps = (state) => {
     gameWinner: state.firestore.data.games
       ? state.firestore.data.games[state.game.gameId].gameWinner
       : null,
+    winners:  state.firestore.data.games
+    ? state.firestore.data.games[state.game.gameId].winners
+    : null, 
     /*  playerId: 'liuzk4',
     playerTurn: 'liuzk4',
     playCard: 'J',
