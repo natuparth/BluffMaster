@@ -42,6 +42,7 @@ class Game extends React.Component {
     );
     this.playerTurn = props.playerTurn;
     this.state = {
+      opponentCards: [],
       players: this.players,
       pname: this.props.pname,
       playerCardsFinished: this.props.playerCardsFinished,
@@ -102,10 +103,18 @@ class Game extends React.Component {
         newMove: this.props.newMove,
         lastPlayer: this.props.lastPlayer,
         playerCardsFinished: this.props.playerCardsFinished,
+        opponentCards: this.getOpponentCards(this.props.firestoreinstance, this.state.players)
       });
     }
   }
-
+  getOpponentCards(firestoreinstance, players){
+    const opponentCards = []  
+    players.forEach(element => {
+         opponentCards.push({pid: element.pid, numberOfCards: firestoreinstance[element.pid]?.length})
+       });
+      console.log(opponentCards);
+   return opponentCards;
+  }
   createPlayersArray(playersArray, playerId, playerName) {
     var pindex;
     var players = [];
@@ -421,6 +430,7 @@ class Game extends React.Component {
           <div> {this.getPlayerNameFromId(this.state.gameWinner)} has won the game</div>
         </Popup>
         <PlayerLayout
+          opponentCards = {this.state.opponentCards}
           players={this.state.players}
           classMapping={this.classMapping}
           playerTurn={this.state.playerTurn}
@@ -499,6 +509,11 @@ const mapStateToProps = (state) => {
    state = JSON.parse(localStorage.getItem('stateValue'));
   else
   localStorage.setItem('stateValue', JSON.stringify(state))
+
+  const players = state.firestore.data.games
+  ? state.firestore.data.games[state.game.gameId].Players
+  : null;
+
   return {
     // gameName: 'hello',
     playerId: state.player.pid,
@@ -545,6 +560,8 @@ const mapStateToProps = (state) => {
     winners:  state.firestore.data.games
     ? state.firestore.data.games[state.game.gameId].winners
     : null, 
+    firestoreinstance: state.firestore.data.games 
+    ? state.firestore.data.games[state.game.gameId] : null
     /*  playerId: 'liuzk4',
     playerTurn: 'liuzk4',
     playCard: 'J',
