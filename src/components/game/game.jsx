@@ -7,6 +7,7 @@ import { CardPicker } from "./cardselector";
 import { PlayerLayout } from "./playerlayout";
 import { PlayingZone } from "./playingzone";
 import { Winners } from './winners'
+import { reverseRanks } from '../globals/globalVariables';
 import Popup from "reactjs-popup";
 import {history} from '../../gameStore/gameStore';
 import "reactjs-popup/dist/index.css";
@@ -70,7 +71,7 @@ class Game extends React.Component {
     if (this.props.myCards !== undefined) {
       if (this.props.myCards !== previousState.myCards) {
         this.setState({
-          myCards: this.props.myCards,
+          myCards: this.sortCards(this.props.myCards),
           playerTurn: this.props.playerTurn,
           stylesArray: Array(this.props.myCards.length).fill({
             selected: false,
@@ -106,6 +107,11 @@ class Game extends React.Component {
         opponentCards: this.getOpponentCards(this.props.firestoreinstance, this.state.players)
       });
     }
+  }
+
+  sortCards(cards){ 
+   cards = cards.slice().sort((card1, card2)=>{return parseInt(reverseRanks[card1.rank]) - parseInt(reverseRanks[card2.rank]) })
+   return cards;
   }
   getOpponentCards(firestoreinstance, players){
     const opponentCards = []  
