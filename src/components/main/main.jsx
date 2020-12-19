@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { AwesomeButton } from "react-awesome-button";
+import "react-awesome-button/dist/styles.css";
 import firebase from "../../Firebase";
 import { useDispatch } from "react-redux";
 import { HostGameAsync, JoinGameAsync } from "../../gameStore/gameSlices";
@@ -52,7 +54,7 @@ function Main() {
             </label>
           </div>
           <button
-            className="createJoinGameButton"
+            className="big-button createJoinGameButton"
             onClick={() => {
               joinGameHandler(gameId, playerName);
             }}
@@ -77,7 +79,7 @@ function Main() {
           </div>
 
           <button
-            className="createJoinGameButton"
+            className="big-button createJoinGameButton"
             onClick={() => {
               createGameHandler(gameName);
             }}
