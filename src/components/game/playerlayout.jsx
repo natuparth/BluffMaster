@@ -46,6 +46,7 @@ export function PlayerLayout(props) {
                width: "45%",
                float: "right",
                fontFamily: "cursive",
+               textAlign: "center"
              }}
            >
              <h4 style={{ margin: "2px" }}>{playerName}</h4>
