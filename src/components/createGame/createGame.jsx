@@ -29,9 +29,13 @@ const historyarr = history;
   }
   return (
     <div className='Game_container1'>
-    
+      <h3>BLUFFMASTER</h3>
+      <div className="gradient-border extraContainer ">
+       <h2 className="textClass" style={{marginTop:'1vh'}}> How to Play </h2>
+     <iframe width="90%" height="50%" src="https://www.youtube.com/embed/AC-JWgeZbv4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+     </div>
      <Players players={playersArray}/>
-      <div className='game_properties_container'>
+      <div className='gradient-border game_properties_container '>
       <div className="gameKeyBox">
         <div className="div1" style={{background: 'antiquewhite'}}>Game Code</div>
         <div className="div2">{gameKey}</div></div> 

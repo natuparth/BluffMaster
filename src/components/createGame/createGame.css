@@ -66,35 +66,67 @@ button {
     
         box-shadow: 0 0 0 2px var(--colorShadeB), 0 0.25em 0 0 var(--colorShadeB);
   
-  }
+  } 
 
   .Game_container1{
+    
+    margin-top: 17vh;
     padding : 2%;
     max-width:100% ;
    height: 550px;
    padding: 0;
-      background-color: rgb(17, 19, 17);
+      /* background-color: rgb(17, 19, 17); */
       display: grid;
-      border: 2px solid red;
+      /* border: 2px solid red; */
       grid-template-columns: 33% 33% 33%;
+      column-gap: 5px;
       grid-template-rows: 22% 22% 22% 34%;
     }
 
     .player_container{
+      border-radius: 5% 25% 5% 5%;
+      box-shadow: 10px 5px 5px navajowhite;
+      background-color: #ccddaa;
+      /* background:
+      linear-gradient(to top, #4caf50, #4caf50 10px, transparent 10px),
+      linear-gradient(to right, #c1ef8c, #c1ef8c 10px, transparent 10px),
+      linear-gradient(to bottom, #8bc34a, #8bc34a 10px, transparent 10px),
+      linear-gradient(to left, #009688, #009688 10px, transparent 10px); */
+      /* border: 8px solid whitesmoke ;
+      border-style: outset; */
+      padding-right: 2vw;
       grid-column-start: 1;
       grid-column-end: 1;
       grid-row-start: 1;
       grid-row-end: 5;
-      background-color: rgb(17, 19, 17);
+      /* background-color: rgb(17, 19, 17); */
     }
     .game_properties_container{
+     border-radius: 5% 25% 5% 5%;
+     background-color: #eeeebb;
+     border: 8px solid #c1ef8c;
+     border-style: outset;
+     padding-right: 2vw;
      grid-column-start: 2;
      grid-column-end: 2;
      grid-row-start: 1;
      grid-row-end: 5;
-     background-color: rgb(17, 19, 17);
+     /* background-color: rgb(17, 19, 17); */
      text-align: center;
 
+    }
+
+    .extraContainer{
+      border-radius: 5% 25% 5% 5%;
+      border: 8px solid khaki ;
+      border-style: outset;
+      background-color: #ffcccc;
+      grid-column-start: 3;
+      grid-column-end: 3;
+      grid-row-start: 1;
+      grid-row-end: 5;
+      /* background-color: rgb(17, 19, 17); */
+      text-align: center;
     }
     ul.game{
       list-style: none;
@@ -155,7 +187,9 @@ button {
 
 .textClass {
   font-family: 'Courier New', Courier, monospace;
-  color: rgb(202, 136, 51);
+  color: lightslategray;
+  font-weight: bolder;
+  margin-left: 2vw;
 }
 .gameNameBox{
   background-color: rgb(235, 55, 55);
@@ -167,7 +201,7 @@ button {
 
 }
 .gameKeyBox{
-  background-color: rgb(235, 55, 55);
+  
   width: 100%;
   border-radius: 5%;
   text-align: center;
@@ -187,14 +221,19 @@ button {
 }
 
 .gameKeyBox .div1 {
+  margin: auto;
+  width: 50%;
   font-size: 25px;
-  color: black;
+  
   padding: 5%;
   grid-row-start: 1;
   grid-column-start: 1;
 }
 .gameKeyBox .div2 {
+  margin: auto;
+  width: 50%;
   font-size: 35px;
+  background-color: rgb(235, 55, 55);
   color: aliceblue;
   padding: 2%;
   grid-row-start: 2;
