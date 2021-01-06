@@ -1,3 +1,21 @@
+@font-face {
+  font-family: myFirstFont;
+  src: url('../../assets/static/JosefinSans-SemiBold.ttf');
+}
+@font-face {
+  font-family: lightItalic;
+  src: url('../../assets/static/JosefinSans-ExtraLightItalic.ttf');
+}
+
+h2.heading{
+  padding-top: 2vh;
+  font-family: myFirstFont;
+  font-size: 7vw;
+  color: bisque;
+  height: 100vh;
+  text-align: center;
+}
+
 :root {
     --backgroundColor: rgba(246, 241, 209);
     --colorShadeA: rgb(106, 163, 137);
@@ -70,23 +88,23 @@ button {
 
   .Game_container1{
     
-    margin-top: 17vh;
+    margin-top: 2vh;
     padding : 2%;
     max-width:100% ;
-   height: 550px;
-   padding: 0;
+   height: 100vh;
+    padding: 0;
       /* background-color: rgb(17, 19, 17); */
       display: grid;
       /* border: 2px solid red; */
       grid-template-columns: 33% 33% 33%;
       column-gap: 5px;
-      grid-template-rows: 22% 22% 22% 34%;
+      grid-template-rows: 15% 22% 22% 33% ;
     }
 
     .player_container{
-      border-radius: 5% 25% 5% 5%;
+      /* border-radius: 5% 25% 5% 5%;
       box-shadow: 10px 5px 5px navajowhite;
-      background-color: #ccddaa;
+      background-color: #ccddaa; */
       /* background:
       linear-gradient(to top, #4caf50, #4caf50 10px, transparent 10px),
       linear-gradient(to right, #c1ef8c, #c1ef8c 10px, transparent 10px),
@@ -97,19 +115,19 @@ button {
       padding-right: 2vw;
       grid-column-start: 1;
       grid-column-end: 1;
-      grid-row-start: 1;
+      grid-row-start: 2;
       grid-row-end: 5;
       /* background-color: rgb(17, 19, 17); */
     }
     .game_properties_container{
-     border-radius: 5% 25% 5% 5%;
+     /* border-radius: 5% 25% 5% 5%;
      background-color: #eeeebb;
      border: 8px solid #c1ef8c;
-     border-style: outset;
+     border-style: outset; */
      padding-right: 2vw;
      grid-column-start: 2;
      grid-column-end: 2;
-     grid-row-start: 1;
+     grid-row-start: 2;
      grid-row-end: 5;
      /* background-color: rgb(17, 19, 17); */
      text-align: center;
@@ -117,13 +135,13 @@ button {
     }
 
     .extraContainer{
-      border-radius: 5% 25% 5% 5%;
+      /* border-radius: 5% 25% 5% 5%;
       border: 8px solid khaki ;
       border-style: outset;
-      background-color: #ffcccc;
+      background-color: #ffcccc; */
       grid-column-start: 3;
       grid-column-end: 3;
-      grid-row-start: 1;
+      grid-row-start: 2;
       grid-row-end: 5;
       /* background-color: rgb(17, 19, 17); */
       text-align: center;
@@ -185,9 +203,13 @@ button {
   browsers: last 2 versions
 }
 
+.border_beige{
+  border: 2px solid beige
+}
+
 .textClass {
-  font-family: 'Courier New', Courier, monospace;
-  color: lightslategray;
+  font-family: myFirstFont;
+  color: darksalmon;
   font-weight: bolder;
   margin-left: 2vw;
 }
@@ -240,7 +262,10 @@ button {
   grid-column-start: 1;
 }
 .deckSelector{
-
+  margin-left: 1vw;
+  padding-top: 1vh;
+  padding-left: 1vw;
+  border: 3px solid lightcoral;
   width: 100%;
   height: 9em;
 
@@ -297,4 +322,8 @@ input[type=radio] {
 
 .w100{
   width: 100%;
+}
+input.radio_button{
+  width: 40%;
+  margin-top: 6vw;
 }

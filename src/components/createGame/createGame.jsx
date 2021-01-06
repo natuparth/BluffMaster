@@ -29,13 +29,13 @@ const historyarr = history;
   }
   return (
     <div className='Game_container1'>
-     
-      <div className="gradient-border extraContainer ">
+     <h2 className="heading"> BLUFFMASTER </h2>
+      <div className="gradient-border extraContainer border_beige">
        <h2 className="textClass" style={{marginTop:'1vh'}}> How to Play </h2>
      <iframe width="90%" height="50%" src="https://www.youtube.com/embed/AC-JWgeZbv4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
      </div>
      <Players players={playersArray}/>
-      <div className='gradient-border game_properties_container '>
+      <div className='gradient-border game_properties_container border_beige'>
       <div className="gameKeyBox">
         <div className="div1" style={{background: 'antiquewhite'}}>Game Code</div>
         <div className="div2">{gameKey}</div></div> 
@@ -64,7 +64,7 @@ const historyarr = history;
   const nodeRef2 = React.useRef(null);
   const nodeRef3 = React.useRef(null);
     return (
-      <div className='player_container'>
+      <div className='player_container border_beige'>
        <h2 className="textClass">
      <span > Waiting for Players </span>
         <Dot nodeRef={nodeRef1}>.</Dot>
@@ -109,7 +109,11 @@ const historyarr = history;
            <ul className="deck" >
               {cardArray}
             </ul>
+            
          </div>
+         <input className="radio_button" type="radio" value="1" name="gender" style={{float:"left"}} 
+        onChange={onSiteChanged}
+         />
          </div>
          <div className="partition">
           <div
@@ -131,6 +135,9 @@ const historyarr = history;
             </ul>
             
          </div>
+         <input className="radio_button" type="radio" value="2" name="gender" style={{float:"left"}}
+         onChange={onSiteChanged}
+         />
          </div>
          <div className="partition" style={{float:"left"}}>
            <div
@@ -161,24 +168,11 @@ const historyarr = history;
             </ul>
             
          </div>
-         </div>
-         <div style={{width: '100%'}}>
-         <div className="partition" >  
-         <input type="radio" value="1" name="gender" style={{float:"left"}} 
-        onChange={onSiteChanged}
-         />
-         </div> 
-         <div className="partition">  
-         <input type="radio" value="2" name="gender" style={{float:"left"}}
+         <input className="radio_button" type="radio" value="3" name="gender" style={{float:"left"}}
          onChange={onSiteChanged}
          />
          </div>
-         <div className="partition">  
-         <input type="radio" value="3" name="gender" style={{float:"left"}}
-         onChange={onSiteChanged}
-         />
-         </div>
-         </div>
+        
       </div>
     );
   }
