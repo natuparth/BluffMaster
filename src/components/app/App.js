@@ -9,7 +9,6 @@ import { Switch, Route } from 'react-router-dom';
 import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
 import { createFirestoreInstance } from 'redux-firestore';
 import firebase from '../../Firebase';
-import Main1 from '../main/main1';
 
 
 const rrfConfig = { userProfile: 'users' }
@@ -32,18 +31,12 @@ export default class App extends React.Component {
   return (
      <ReactReduxFirebaseProvider {...rrfProps}>
     <div>      
-     {/* <div className="App App-header">
-      <Header/>
-     </div>  
-     <div style={ {width:"100vw", height:"85vh"} }>    */}
       <Switch>
-       <Route exact path="/" component={Main1}/>
-      {/* <Route exact path="/" component={CreateGame}/> */}
+      <Route exact path="/" component={Main}/>
       <Route path="/startgame" component={CreateGame}/>
       <Route path="/game" component= {Game}/>
     </Switch>
      </div> 
-    {/* </div> */}
     </ReactReduxFirebaseProvider>
 
   );
