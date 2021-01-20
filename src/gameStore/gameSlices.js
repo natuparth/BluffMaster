@@ -78,7 +78,8 @@ export const HostGameAsync = gameData => (dispatch, getState, {getFirebase, getF
     newMove: true,
     gameWinner: '',
     winnerDecided: false,
-    winners: []
+    winners: [],
+    passes: []
   }
     const firestore = getFirestore();
     firestore.collection('games').add(game).then((doc)=>{

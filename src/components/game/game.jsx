@@ -267,19 +267,43 @@ class Game extends React.Component {
     ) {
       updateObj.playerTurn = this.state.players[2].pid;
       this.winnerHandler(this.state.players[1].pid);
-    } else updateObj.playerTurn = this.state.players[1].pid;
+      updateObj.passes = [];
+    } 
+    else{ 
       var self = this;
+      let passesMap = this.props.firestoreinstance.passes;
+      var pid=this.props.playerId;
+      var passesObj = {
+          ...passesMap
+         };
+         console.log(self.state.players.length)
+      if(passesMap[pid] === undefined && Object.keys(passesObj).length + 1 === this.state.players.length)
+       {
+         alert('everyone has passed. Cards will be knocked out ')
+         updateObj.passes = [];
+         updateObj.playerTurn = this.props.firestoreinstance.lastPlayer;
+         updateObj.gameCards = [];
+         updateObj.newMove = true;
+       }
+       else
+       {
+        passesObj[pid] = '1';
+        updateObj.playerTurn = this.state.players[1].pid;
+        updateObj.passes = passesObj;
+       }
+      }
     setTimeout(function () {
+       
       db.collection("games")
         .doc(self.props.gameId)
         .update({
-          playerTurn: self.state.players[1].pid,
+          ...updateObj,
           winnerDecided: false,
         })
         .then((doc) => {
           console.log(doc);
         });
-    }, 5000);
+    }, 2000);
   }
   challengeHandler(bluff, lastPlayer) {
     var updateObj = {};
@@ -579,7 +603,8 @@ const mapStateToProps = (state) => {
     ? state.firestore.data.games[state.game.gameId].winners
     : null, 
     firestoreinstance: state.firestore.data.games 
-    ? state.firestore.data.games[state.game.gameId] : null
+    ? state.firestore.data.games[state.game.gameId] 
+    : null
     /*  playerId: 'liuzk4',
     playerTurn: 'liuzk4',
     playCard: 'J',
