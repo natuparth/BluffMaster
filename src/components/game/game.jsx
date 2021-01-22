@@ -261,16 +261,20 @@ class Game extends React.Component {
   }
   passHandler() {
     var updateObj = {};
-    if (
-      this.state.winnerDecided === true &&
-      this.state.gameWinner === this.state.players[1].pid
-    ) {
+    var self = this;
+    // if (
+    //   this.state.winnerDecided === true &&
+    //   this.state.gameWinner === this.state.players[1].pid
+    // )
+    if(this.state.playerCardsFinished === true && this.state.lastPlayer === this.state.players[1].pid)
+    {
       updateObj.playerTurn = this.state.players[2].pid;
       this.winnerHandler(this.state.players[1].pid);
+      
       updateObj.passes = [];
     } 
     else{ 
-      var self = this;
+     
       let passesMap = this.props.firestoreinstance.passes;
       var pid=this.props.playerId;
       var passesObj = {
@@ -293,7 +297,7 @@ class Game extends React.Component {
        }
       }
     setTimeout(function () {
-       
+       console.log(self.props.gameId);
       db.collection("games")
         .doc(self.props.gameId)
         .update({
