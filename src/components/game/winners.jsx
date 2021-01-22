@@ -7,9 +7,14 @@ export function Winners(props) {
        elem.push(<li key={props.winners[i].pid}>{props.winners[i].pname}</li>)
     return (
       <div className="winnersContainer">
+         <div>
+         <h3 style={{fontFamily : "myFirstFont"}}>Winners</h3> 
+         </div>
+         <div className="winnersList">
          <ul>
             {elem}
-         </ul>   
+         </ul>
+         </div>
           </div>
   )
 

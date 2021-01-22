@@ -1,8 +1,12 @@
+@font-face {
+  font-family: myFirstFont;
+  src: url('../../assets/static/JosefinSans-SemiBold.ttf');
+}
 .Game_container{
     padding : 2%;
     max-width:100% ;
     max-height: 100%; 
-    height: 95%;
+    height: 100vh;
     background-color: rgb(240, 235, 235);
     display: grid;
     border: 2px solid red;
@@ -10,14 +14,7 @@
     grid-template-rows: 22% 22% 22% 34%;
   }
  
-  .winnersContainer{
-    display: flex;
-    grid-column-start: 5;
-    grid-column-end: span 1;
-    grid-row-start: 4;
-    grid-row-end: span 1;
-     background-color: rgb(184, 212, 184); 
-   }
+  
    .playingZone{
      grid-column-start:2;
      grid-column-end: 5;
@@ -230,4 +227,43 @@
   margin-top: 15%;
   text-align: center;
   width: 2.5em; 
+}
+
+.winnersContainer{
+  display: table;
+  grid-column-start: 5;
+  grid-column-end: span 1;
+  grid-row-start: 4;
+  grid-row-end: span 1;
+  padding: 2%;
+ }
+
+.winnersList{
+  display: block;
+  width: 100%;
+  list-style: none;
+  padding: 0%;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: myFirstFont;
+ 
+}
+.winnersList ul{
+  list-style: none;
+  padding: 0%;
+  opacity: 0.6;
+}
+.winnersList li{
+  padding-top:1vh;
+
+ background-color: floralwhite;
+ height: 3.5vh;
+ border-bottom: 2px solid antiquewhite;
+
+}
+.winnersContainer h3{
+  color: navajowhite;
+  background-color: brown;
+  text-align: center;
+  width: 100%;
 }
