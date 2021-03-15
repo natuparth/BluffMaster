@@ -124,6 +124,11 @@ button {
      background-color: #eeeebb;
      border: 8px solid #c1ef8c;
      border-style: outset; */
+     display: grid;
+      /* border: 2px solid red; */
+     
+      row-gap: 10px;
+      grid-template-rows: 40% 30% 30%;
      padding-right: 2vw;
      grid-column-start: 2;
      grid-column-end: 2;
@@ -223,15 +228,15 @@ button {
 
 }
 .gameKeyBox{
-  
+  grid-row-start: 1;
   width: 100%;
   border-radius: 5%;
   text-align: center;
-  margin: auto;
+  
   margin-top: 1em;
   display: grid;
   grid-template-columns: 40% 30% 30%;
-  grid-template-rows: 50% 50%;
+  grid-template-rows: 25% 25% 25% 20%;
   font-family: 'Courier New', Courier, monospace;
  
 
@@ -248,9 +253,9 @@ button {
   font-size: 2em;
   
   padding: 2%;
-  grid-row-start: 1;
-  grid-column-start: 1;
-  grid-column-end: 1;
+  grid-row-start: 4;
+  grid-column-start: 3;
+  grid-column-end: 3;
 }
 .gameKeyBox .div2 {
   margin-left: 0.2em;
@@ -259,11 +264,34 @@ button {
   background-color: rgb(235, 55, 55);
   color: aliceblue;
   padding: 2%;
-  grid-row-start: 2;
+  grid-row-start: 4;
   grid-column-start: 1;
   grid-column-end: 1;
 }
+
+.gameKeyBox .div3{
+  /* background-color: beige; */
+  border: 2px solid whitesmoke;
+  grid-row-start: 1;
+  grid-row-end:4;
+  grid-column-start: 2;
+  grid-column-end: 2;
+}
+
+.gameKeyBox .div3 h4{
+  font-size:"x-large";
+  color: #ccc;
+}
+
+.gameKeyBox .div3 img{
+  
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    
+}
 .deckSelector{
+  grid-row-start: 2;
   margin-left: 1vw;
   padding-top: 1vh;
   padding-left: 1vw;
@@ -271,6 +299,10 @@ button {
   width: 100%;
   height: 9em;
 
+}
+
+.playButton{
+  grid-row-start: 3;
 }
 
 .twoDecks{

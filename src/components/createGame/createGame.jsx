@@ -10,11 +10,14 @@ import { firestoreConnect} from 'react-redux-firebase';
 import { compose } from 'redux';
 import {history} from '../../gameStore/gameStore';
 import Popup from 'reactjs-popup';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faKey, faCameraRetro } from '@fortawesome/free-solid-svg-icons'
 import "reactjs-popup/dist/index.css";
 
 import './createGame.css';
 import { AvatarPicker } from "material-ui-avatar-picker";
 import { Button } from "bootstrap";
+import { lighten } from "@material-ui/core";
 
 
 const db = firebase.firestore();
@@ -30,11 +33,20 @@ const historyarr = history;
   const [numberOfDecks, setNumberOfDecks] = useState(1);
   const [numberOfLifeLines, setNumberOfLifeLines] = useState(3);
   const [avatarPickerPopup, setAvatarPickupPopupHandler] = useState(false);
+  const [avatar, setAvatar] = useState(0);
   const numberOfPlayers = playersArray?playersArray.length:0;
   
   function onSiteChanged(e){
     setNumberOfDecks(e.currentTarget.value);
     console.log(e.currentTarget.value)
+  }
+
+  const onAvatarPicked = (e) => {
+    let val = e.currentTarget.value.toString();
+    if(e.currentTarget.value < 10)
+      val = '0'+e.currentTarget.value;
+    setAvatar(val)
+    console.log(val)
   }
   const avatarPickerPopupHandler = ()=>{
      setAvatarPickupPopupHandler(true);
@@ -53,9 +65,13 @@ const historyarr = history;
      <Players players={playersArray}/>
       <div className='gradient-border game_properties_container border_beige'>
       <div className="gameKeyBox">
-        <div className="div1" style={{background: 'antiquewhite'}}>Game Code</div>
-        <div className="div2">{gameKey}</div>
-        <button className="primary" onClick={avatarPickerPopupHandler}>Avatar Picker</button>
+        <div className="div1" style={{background: 'antiquewhite'}}>{gameName}</div>
+        <div className="div2">{gameKey} <FontAwesomeIcon icon={faKey} color="white"/> </div>
+         <div className="div3" onClick={avatarPickerPopupHandler}>
+         
+         { avatar === 0 ? <div><h4>Pick an Avatar</h4>
+         <FontAwesomeIcon icon={faCameraRetro} size="2x" color="white"/></div> : <img src={require('../../assets/AVATAR/image_part_0'+avatar+'.jpg')}></img>}
+        </div>
         </div>
        
        <Popup open={avatarPickerPopup} onClose={closeAvatarPicker}>
@@ -63,52 +79,53 @@ const historyarr = history;
           <div><h3 className='popup_heading'> Choose an avatar</h3></div>
           <div className="popup_grid">
            <div className='a'><img src={require('../../assets/AVATAR/image_part_001.jpg')}></img>
-           <input type="radio" value="1" name="gender" />
+           <input type="radio" value="1" name="gender" onChange={onAvatarPicked}/>
            </div>
            <div className='b'><img src={require('../../assets/AVATAR/image_part_002.jpg')}></img>
-           <input type="radio" value="1" name="gender" /></div>
+           <input type="radio" value="2" name="gender" onChange={onAvatarPicked}/></div>
            <div className='c'><img src={require('../../assets/AVATAR/image_part_003.jpg')}></img>
-           <input type="radio" value="1" name="gender" /></div>
+           <input type="radio" value="3" name="gender" onChange={onAvatarPicked}/></div>
            <div className='d'><img src={require('../../assets/AVATAR/image_part_004.jpg')}></img>
-           <input type="radio" value="1" name="gender" /></div>
+           <input type="radio" value="4" name="gender" onChange={onAvatarPicked}/></div>
            <div className='e'><img src={require('../../assets/AVATAR/image_part_005.jpg')}></img>
-           <input type="radio" value="1" name="gender" /></div>
+           <input type="radio" value="5" name="gender" onChange={onAvatarPicked}/></div>
            <div className='f'><img src={require('../../assets/AVATAR/image_part_006.jpg')}></img>
-           <input type="radio" value="1" name="gender" /></div>
+           <input type="radio" value="6" name="gender" onChange={onAvatarPicked}/></div>
            <div className='g'><img src={require('../../assets/AVATAR/image_part_007.jpg')}></img>
-           <input type="radio" value="1" name="gender" /></div>
+           <input type="radio" value="7" name="gender" onChange={onAvatarPicked}/></div>
            <div className='h'><img src={require('../../assets/AVATAR/image_part_008.jpg')}></img>
-           <input type="radio" value="1" name="gender" /></div>
+           <input type="radio" value="8" name="gender" onChange={onAvatarPicked}/></div>
            <div className='i'><img src={require('../../assets/AVATAR/image_part_009.jpg')}></img>
-           <input type="radio" value="1" name="gender" /></div>
+           <input type="radio" value="9" name="gender" onChange={onAvatarPicked}/></div>
            <div className='j'><img src={require('../../assets/AVATAR/image_part_010.jpg')}></img>
-           <input type="radio" value="1" name="gender" /></div>
+           <input type="radio" value="10" name="gender" onChange={onAvatarPicked}/></div>
            <div className='k'><img src={require('../../assets/AVATAR/image_part_011.jpg')}></img>
-           <input type="radio" value="1" name="gender" /></div>
+           <input type="radio" value="11" name="gender" onChange={onAvatarPicked}/></div>
            <div className='l'><img src={require('../../assets/AVATAR/image_part_012.jpg')}></img>
-           <input type="radio" value="1" name="gender" /></div>
+           <input type="radio" value="12" name="gender" onChange={onAvatarPicked}/></div>
            <div className='m'><img src={require('../../assets/AVATAR/image_part_013.jpg')}></img>
-           <input type="radio" value="1" name="gender" /></div>
+           <input type="radio" value="13" name="gender" onChange={onAvatarPicked}/></div>
            <div className='n'><img src={require('../../assets/AVATAR/image_part_014.jpg')}></img>
-           <input type="radio" value="1" name="gender" /></div>
+           <input type="radio" value="14" name="gender" onChange={onAvatarPicked}/></div>
            <div className='o'><img src={require('../../assets/AVATAR/image_part_015.jpg')}></img>
-           <input type="radio" value="1" name="gender" /></div>
+           <input type="radio" value="15" name="gender" onChange={onAvatarPicked}/></div>
            <div className='p'><img src={require('../../assets/AVATAR/image_part_016.jpg')}></img>
-           <input type="radio" value="1" name="gender" /></div>
+           <input type="radio" value="16" name="gender" onChange={onAvatarPicked}/></div>
           </div>
           </div>
-          <div className="text-center"> <button className='btn-primary  rounded-lg mt-1'>Select</button></div>
+          <div className="text-center"> <button onClick={closeAvatarPicker} className='btn-primary  rounded-lg mt-1'>Select</button></div>
         </Popup>
         
       {/* <div className="gameNameBox">{gameName}</div> */}
-      <br/>
+     
       <NumberOfDecks />
-      <br/>
+  
       {/* <NumberOfLifeLines /> */}
-      <br/>
+      <div className="playButton">
       <button className="big-button" onClick={()=>startGameHandler(numberOfDecks,numberOfPlayers,gameId)} >
         Start Game
       </button>
+      </div>
       </div>
     </div>
   );
