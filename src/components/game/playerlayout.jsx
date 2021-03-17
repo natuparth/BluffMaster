@@ -17,12 +17,13 @@ export function PlayerLayout(props) {
        var clsName = props.classMapping[i - 1];
        var playerName = props.players[i - 1].pname.toUpperCase();
       console.log(props.opponentCards)
-      console.log(props.players[i-1].pid)
+      console.log(props.players)
         var playerCards = props.opponentCards.filter(player =>{return player.pid === props.players[i-1].pid})[0]?.numberOfCards
-      // if(playerCards)
+        var avatar =  props.players.filter(player =>{return player.pid === props.players[i-1].pid})[0]?.pictureId ;
+       // if(playerCards)
        // if('numberOfCards' in playerCards[0])
-          console.log(playerCards)
-        //.numberOfCards;
+       // console.log(playerCards)
+       //.numberOfCards;
        var cardArray = [];
         for(var j=0;j<5;j++)  
             cardArray.push( <li key={j}>
@@ -30,14 +31,17 @@ export function PlayerLayout(props) {
            </li>)
        elem.push(
          <div className={clsName}>
-           <div
+          <div>
+          <img src={require('../../assets/AVATAR/image_part_0'+avatar+'.jpg')}></img>
+            </div>
+           {/* <div
              className="playingCards"
              style={{ display: "inline-block", width: "50%", float: "left" }}
            >
              <ul className="deck" >
                 {cardArray}
               </ul>
-           </div>
+           </div> */}
    
            <div
              className={animated}

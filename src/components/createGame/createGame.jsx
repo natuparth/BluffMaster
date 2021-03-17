@@ -24,7 +24,7 @@ const db = firebase.firestore();
 const historyarr = history;
 
 
- function CreateGame({gameKey,gameId,gameName,isHost, playersArray, gameStarted}) {
+ function CreateGame({gameKey,gameId,gameName,isHost, playersArray, gameStarted, pid}) {
   
   if(gameStarted === true){
     historyarr.push('/game',{gameId: gameId});
@@ -44,10 +44,24 @@ const historyarr = history;
   const onAvatarPicked = (e) => {
     let val = e.currentTarget.value.toString();
     if(e.currentTarget.value < 10)
-      val = '0'+e.currentTarget.value;
+       val = '0'+e.currentTarget.value;
     setAvatar(val)
-    console.log(val)
-  }
+    var docRef = db.collection('games').doc(gameId);
+    docRef.get().then((documentsnapshot) => {
+    var newArray=documentsnapshot.data().Players
+    var playerIndex = newArray.findIndex((element) => {
+      return element.pid === pid;
+    }); 
+       
+    newArray[playerIndex].pictureId = val;  
+    db.collection('games').doc(gameId).update(
+       {
+         Players: newArray,
+       }
+     )
+    
+      })
+}
   const avatarPickerPopupHandler = ()=>{
      setAvatarPickupPopupHandler(true);
   }
@@ -277,29 +291,24 @@ const historyarr = history;
   }
   
   function startGameHandler(numberOfDecks, numberOfPlayers, gameId) {
-    console.log(numberOfDecks);
+   // console.log(numberOfDecks);
     var playerCards = DistributeCards(numberOfDecks,numberOfPlayers);
-    console.log(playerCards)
+    //console.log(playerCards)
     var docRef = db.collection('games').doc(gameId);
     docRef.get().then((documentsnapshot)=>{
-     var newArray=documentsnapshot.data().Players
-    //  newArray.forEach((element, index) => {
-    //        element.cards = playerCards[index].cards; 
-                   
-    //    });
+    var newArray=documentsnapshot.data().Players
+    var playerIndex = 0;
        var cardDist = {};
        newArray.forEach((element, index) => {
                 var name = element.pid
                 cardDist[name] = playerCards[index].cards
+                if(element.pid === pid)
+                  playerIndex = index;
                 
        })
- 
-   
-
     var playerTurn = Math.floor(Math.random() * newArray.length);
-     
-      console.log(newArray[playerTurn].pid)
-      var obj = {
+    newArray[playerIndex].pictureId = avatar;  
+    var obj = {
         gameStarted: true,
         Players: newArray,
         playerTurn: newArray[playerTurn].pid,
@@ -308,6 +317,7 @@ const historyarr = history;
       console.log(obj);
     db.collection('games').doc(gameId).update(
        {
+       
          gameStarted: true,
          Players: newArray,
          playerTurn: newArray[playerTurn].pid,
@@ -371,7 +381,7 @@ for(i=1;i<=players;i++)
 
 
 const mapStateToProps = (state) => {
- 
+ console.log(state);
   return ({
     gameKey: state.game.gameKey,
      gameId: state.game.gameId,
@@ -381,8 +391,8 @@ const mapStateToProps = (state) => {
     //gameName: 'new_game',
     //isHost: 'false',
     playersArray: state.firestore.data.games ? state.firestore.data.games[state.game.gameId].Players: null,
-    gameStarted: state.firestore.data.games?state.firestore.data.games[state.game.gameId].gameStarted: false
-   
+    gameStarted: state.firestore.data.games?state.firestore.data.games[state.game.gameId].gameStarted: false,
+    pid: state.router.location.state.pid
 //     playersArray:[{pname: 'parth'},
 //     {pname: 'lokesh'},
 // {pname: 'samarth'}
