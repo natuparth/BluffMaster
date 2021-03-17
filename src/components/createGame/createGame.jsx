@@ -307,7 +307,7 @@ const historyarr = history;
                 
        })
     var playerTurn = Math.floor(Math.random() * newArray.length);
-    newArray[playerIndex].pictureId = avatar;  
+    // newArray[playerIndex].pictureId = avatar;  
     var obj = {
         gameStarted: true,
         Players: newArray,
