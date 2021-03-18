@@ -124,6 +124,11 @@ button {
      background-color: #eeeebb;
      border: 8px solid #c1ef8c;
      border-style: outset; */
+     display: grid;
+      /* border: 2px solid red; */
+     
+      row-gap: 10px;
+      grid-template-rows: 40% 30% 30%;
      padding-right: 2vw;
      grid-column-start: 2;
      grid-column-end: 2;
@@ -223,15 +228,15 @@ button {
 
 }
 .gameKeyBox{
-  
+  grid-row-start: 1;
   width: 100%;
   border-radius: 5%;
   text-align: center;
-  margin: auto;
+  
   margin-top: 1em;
   display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 50% 50%;
+  grid-template-columns: 40% 30% 30%;
+  grid-template-rows: 25% 25% 25% 20%;
   font-family: 'Courier New', Courier, monospace;
  
 
@@ -243,25 +248,50 @@ button {
 }
 
 .gameKeyBox .div1 {
-  margin: auto;
-  width: 50%;
-  font-size: 25px;
+  margin-left: 0.2em;
   
-  padding: 5%;
-  grid-row-start: 1;
-  grid-column-start: 1;
+  font-size: 2em;
+  
+  padding: 2%;
+  grid-row-start: 4;
+  grid-column-start: 3;
+  grid-column-end: 3;
 }
 .gameKeyBox .div2 {
-  margin: auto;
-  width: 50%;
-  font-size: 35px;
+  margin-left: 0.2em;
+  
+  font-size: 2em;
   background-color: rgb(235, 55, 55);
   color: aliceblue;
   padding: 2%;
-  grid-row-start: 2;
+  grid-row-start: 4;
   grid-column-start: 1;
+  grid-column-end: 1;
+}
+
+.gameKeyBox .div3{
+  /* background-color: beige; */
+  border: 2px solid whitesmoke;
+  grid-row-start: 1;
+  grid-row-end:4;
+  grid-column-start: 2;
+  grid-column-end: 2;
+}
+
+.gameKeyBox .div3 h4{
+  font-size:"x-large";
+  color: #ccc;
+}
+
+.gameKeyBox .div3 img{
+  
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    
 }
 .deckSelector{
+  grid-row-start: 2;
   margin-left: 1vw;
   padding-top: 1vh;
   padding-left: 1vw;
@@ -269,6 +299,10 @@ button {
   width: 100%;
   height: 9em;
 
+}
+
+.playButton{
+  grid-row-start: 3;
 }
 
 .twoDecks{
@@ -326,4 +360,155 @@ input[type=radio] {
 input.radio_button{
   width: 40%;
   margin-top: 6vw;
+}
+
+.popup_grid{
+  height: 80vh;
+  width: fit-content;
+  background-color: rgb(240, 235, 235);
+    display: grid;
+    border: 2px solid red;
+    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-rows: 25% 25% 25% 25%;
+}
+.a{
+  grid-column-start:1;
+  grid-column-end: 1;
+  grid-row-start: 1;
+  grid-row-end: 1;
+ text-align: center;
+
+}
+.b{
+  grid-column-start:2;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 1;
+ text-align: center;
+}
+.c{
+  grid-column-start:3;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 1;
+ text-align: center;
+}
+.d{
+  grid-column-start:4;
+  grid-column-end: 4;
+  grid-row-start: 1;
+  grid-row-end: 1;
+ text-align: center;
+}
+.e{
+  grid-column-start:1;
+  grid-column-end: 1;
+  grid-row-start: 2;
+  grid-row-end: 2;
+ text-align: center;
+}
+.f{
+  grid-column-start:2;
+  grid-column-end: 2;
+  grid-row-start: 2;
+  grid-row-end: 2;
+ text-align: center;
+}
+.g{
+  grid-column-start:3;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 2;
+ text-align: center;
+}
+.h{
+  grid-column-start:4;
+  grid-column-end: 4;
+  grid-row-start: 2;
+  grid-row-end: 2;
+ text-align: center;
+}
+.i{
+  grid-column-start:1;
+  grid-column-end: 1;
+  grid-row-start: 3;
+  grid-row-end: 3;
+ text-align: center;
+}
+.j{
+  grid-column-start:2;
+  grid-column-end: 2;
+  grid-row-start: 3;
+  grid-row-end: 3;
+ text-align: center;
+}
+.k{
+  grid-column-start:3;
+  grid-column-end: 3;
+  grid-row-start: 3;
+  grid-row-end: 3;
+ text-align: center;
+}
+.l{
+  grid-column-start:4;
+  grid-column-end: 4;
+  grid-row-start: 3;
+  grid-row-end: 3;
+ text-align: center;
+}
+.m{
+  grid-column-start:1;
+  grid-column-end: 1;
+  grid-row-start: 4;
+  grid-row-end: 4;
+ text-align: center;
+}
+.n{
+  grid-column-start:2;
+  grid-column-end: 2;
+  grid-row-start: 4;
+  grid-row-end: 4;
+ text-align: center;
+}
+.o{
+  grid-column-start:3;
+  grid-column-end: 3;
+  grid-row-start: 4;
+  grid-row-end: 4;
+ text-align: center;
+}
+.p{
+  grid-column-start:4;
+  grid-column-end: 4;
+  grid-row-start: 4;
+  grid-row-end: 4;
+ text-align: center;
+}
+.popup_grid img{
+  width: 80%;
+  height: 80%;
+}
+.popup_grid input[type=radio] {
+  border: 0px;
+  width: 1.4em;
+  height: 1.8em;
+}
+.popup_heading{
+  padding-top: 1vh;
+  font-family: myFirstFont;
+  font-size: 2vw;
+  color: brown;
+ 
+  text-align: center;
+}
+.popup_container{
+  width: 20em;
+  margin: auto;
+  
+}
+.popup-content {
+  margin: auto;
+  background: rgb(255, 255, 255);
+  width: fit-content;
+  padding: 5px;
 }

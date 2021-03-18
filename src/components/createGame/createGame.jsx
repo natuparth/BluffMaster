@@ -1,4 +1,6 @@
 import React from "react";
+import ReactDOM from "react-dom";
+
 import { Dot } from 'react-animated-dots';
 import firebase from "../../Firebase";
 import {ranks, suits} from  "../globals/globalVariables";
@@ -7,13 +9,22 @@ import { connect } from "react-redux";
 import { firestoreConnect} from 'react-redux-firebase';
 import { compose } from 'redux';
 import {history} from '../../gameStore/gameStore';
+import Popup from 'reactjs-popup';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faKey, faCameraRetro } from '@fortawesome/free-solid-svg-icons'
+import "reactjs-popup/dist/index.css";
+
 import './createGame.css';
+import { AvatarPicker } from "material-ui-avatar-picker";
+import { Button } from "bootstrap";
+import { lighten } from "@material-ui/core";
+
 
 const db = firebase.firestore();
 const historyarr = history;
 
 
- function CreateGame({gameKey,gameId,gameName,isHost, playersArray, gameStarted}) {
+ function CreateGame({gameKey,gameId,gameName,isHost, playersArray, gameStarted, pid}) {
   
   if(gameStarted === true){
     historyarr.push('/game',{gameId: gameId});
@@ -21,11 +32,42 @@ const historyarr = history;
   const isPlayerHost = isHost;
   const [numberOfDecks, setNumberOfDecks] = useState(1);
   const [numberOfLifeLines, setNumberOfLifeLines] = useState(3);
+  const [avatarPickerPopup, setAvatarPickupPopupHandler] = useState(false);
+  const [avatar, setAvatar] = useState(0);
   const numberOfPlayers = playersArray?playersArray.length:0;
   
   function onSiteChanged(e){
     setNumberOfDecks(e.currentTarget.value);
     console.log(e.currentTarget.value)
+  }
+
+  const onAvatarPicked = (e) => {
+    let val = e.currentTarget.value.toString();
+    if(e.currentTarget.value < 10)
+       val = '0'+e.currentTarget.value;
+    setAvatar(val)
+    var docRef = db.collection('games').doc(gameId);
+    docRef.get().then((documentsnapshot) => {
+    var newArray=documentsnapshot.data().Players
+    var playerIndex = newArray.findIndex((element) => {
+      return element.pid === pid;
+    }); 
+       
+    newArray[playerIndex].pictureId = val;  
+    db.collection('games').doc(gameId).update(
+       {
+         Players: newArray,
+       }
+     )
+    
+      })
+}
+  const avatarPickerPopupHandler = ()=>{
+     setAvatarPickupPopupHandler(true);
+  }
+
+  const closeAvatarPicker = ()=>{
+    setAvatarPickupPopupHandler(false);
   }
   return (
     <div className='Game_container1'>
@@ -37,17 +79,67 @@ const historyarr = history;
      <Players players={playersArray}/>
       <div className='gradient-border game_properties_container border_beige'>
       <div className="gameKeyBox">
-        <div className="div1" style={{background: 'antiquewhite'}}>Game Code</div>
-        <div className="div2">{gameKey}</div></div> 
+        <div className="div1" style={{background: 'antiquewhite'}}>{gameName}</div>
+        <div className="div2">{gameKey} <FontAwesomeIcon icon={faKey} color="white"/> </div>
+         <div className="div3" onClick={avatarPickerPopupHandler}>
+         
+         { avatar === 0 ? <div><h4>Pick an Avatar</h4>
+         <FontAwesomeIcon icon={faCameraRetro} size="2x" color="white"/></div> : <img src={require('../../assets/AVATAR/image_part_0'+avatar+'.jpg')}></img>}
+        </div>
+        </div>
+       
+       <Popup open={avatarPickerPopup} onClose={closeAvatarPicker}>
+          <div className="popup_container">
+          <div><h3 className='popup_heading'> Choose an avatar</h3></div>
+          <div className="popup_grid">
+           <div className='a'><img src={require('../../assets/AVATAR/image_part_001.jpg')}></img>
+           <input type="radio" value="1" name="gender" onChange={onAvatarPicked}/>
+           </div>
+           <div className='b'><img src={require('../../assets/AVATAR/image_part_002.jpg')}></img>
+           <input type="radio" value="2" name="gender" onChange={onAvatarPicked}/></div>
+           <div className='c'><img src={require('../../assets/AVATAR/image_part_003.jpg')}></img>
+           <input type="radio" value="3" name="gender" onChange={onAvatarPicked}/></div>
+           <div className='d'><img src={require('../../assets/AVATAR/image_part_004.jpg')}></img>
+           <input type="radio" value="4" name="gender" onChange={onAvatarPicked}/></div>
+           <div className='e'><img src={require('../../assets/AVATAR/image_part_005.jpg')}></img>
+           <input type="radio" value="5" name="gender" onChange={onAvatarPicked}/></div>
+           <div className='f'><img src={require('../../assets/AVATAR/image_part_006.jpg')}></img>
+           <input type="radio" value="6" name="gender" onChange={onAvatarPicked}/></div>
+           <div className='g'><img src={require('../../assets/AVATAR/image_part_007.jpg')}></img>
+           <input type="radio" value="7" name="gender" onChange={onAvatarPicked}/></div>
+           <div className='h'><img src={require('../../assets/AVATAR/image_part_008.jpg')}></img>
+           <input type="radio" value="8" name="gender" onChange={onAvatarPicked}/></div>
+           <div className='i'><img src={require('../../assets/AVATAR/image_part_009.jpg')}></img>
+           <input type="radio" value="9" name="gender" onChange={onAvatarPicked}/></div>
+           <div className='j'><img src={require('../../assets/AVATAR/image_part_010.jpg')}></img>
+           <input type="radio" value="10" name="gender" onChange={onAvatarPicked}/></div>
+           <div className='k'><img src={require('../../assets/AVATAR/image_part_011.jpg')}></img>
+           <input type="radio" value="11" name="gender" onChange={onAvatarPicked}/></div>
+           <div className='l'><img src={require('../../assets/AVATAR/image_part_012.jpg')}></img>
+           <input type="radio" value="12" name="gender" onChange={onAvatarPicked}/></div>
+           <div className='m'><img src={require('../../assets/AVATAR/image_part_013.jpg')}></img>
+           <input type="radio" value="13" name="gender" onChange={onAvatarPicked}/></div>
+           <div className='n'><img src={require('../../assets/AVATAR/image_part_014.jpg')}></img>
+           <input type="radio" value="14" name="gender" onChange={onAvatarPicked}/></div>
+           <div className='o'><img src={require('../../assets/AVATAR/image_part_015.jpg')}></img>
+           <input type="radio" value="15" name="gender" onChange={onAvatarPicked}/></div>
+           <div className='p'><img src={require('../../assets/AVATAR/image_part_016.jpg')}></img>
+           <input type="radio" value="16" name="gender" onChange={onAvatarPicked}/></div>
+          </div>
+          </div>
+          <div className="text-center"> <button onClick={closeAvatarPicker} className='btn-primary  rounded-lg mt-1'>Select</button></div>
+        </Popup>
+        
       {/* <div className="gameNameBox">{gameName}</div> */}
-      <br/>
+     
       <NumberOfDecks />
-      <br/>
+  
       {/* <NumberOfLifeLines /> */}
-      <br/>
+      <div className="playButton">
       <button className="big-button" onClick={()=>startGameHandler(numberOfDecks,numberOfPlayers,gameId)} >
         Start Game
       </button>
+      </div>
       </div>
     </div>
   );
@@ -199,29 +291,24 @@ const historyarr = history;
   }
   
   function startGameHandler(numberOfDecks, numberOfPlayers, gameId) {
-    console.log(numberOfDecks);
+   // console.log(numberOfDecks);
     var playerCards = DistributeCards(numberOfDecks,numberOfPlayers);
-    console.log(playerCards)
+    //console.log(playerCards)
     var docRef = db.collection('games').doc(gameId);
     docRef.get().then((documentsnapshot)=>{
-     var newArray=documentsnapshot.data().Players
-    //  newArray.forEach((element, index) => {
-    //        element.cards = playerCards[index].cards; 
-                   
-    //    });
+    var newArray=documentsnapshot.data().Players
+    var playerIndex = 0;
        var cardDist = {};
        newArray.forEach((element, index) => {
                 var name = element.pid
                 cardDist[name] = playerCards[index].cards
+                if(element.pid === pid)
+                  playerIndex = index;
                 
        })
- 
-   
-
     var playerTurn = Math.floor(Math.random() * newArray.length);
-     
-      console.log(newArray[playerTurn].pid)
-      var obj = {
+    // newArray[playerIndex].pictureId = avatar;  
+    var obj = {
         gameStarted: true,
         Players: newArray,
         playerTurn: newArray[playerTurn].pid,
@@ -230,6 +317,7 @@ const historyarr = history;
       console.log(obj);
     db.collection('games').doc(gameId).update(
        {
+       
          gameStarted: true,
          Players: newArray,
          playerTurn: newArray[playerTurn].pid,
@@ -293,7 +381,7 @@ for(i=1;i<=players;i++)
 
 
 const mapStateToProps = (state) => {
- 
+ console.log(state);
   return ({
     gameKey: state.game.gameKey,
      gameId: state.game.gameId,
@@ -303,8 +391,8 @@ const mapStateToProps = (state) => {
     //gameName: 'new_game',
     //isHost: 'false',
     playersArray: state.firestore.data.games ? state.firestore.data.games[state.game.gameId].Players: null,
-    gameStarted: state.firestore.data.games?state.firestore.data.games[state.game.gameId].gameStarted: false
-   
+    gameStarted: state.firestore.data.games?state.firestore.data.games[state.game.gameId].gameStarted: false,
+    pid: state.router.location.state.pid
 //     playersArray:[{pname: 'parth'},
 //     {pname: 'lokesh'},
 // {pname: 'samarth'}

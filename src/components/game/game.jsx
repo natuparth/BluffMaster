@@ -149,6 +149,7 @@ class Game extends React.Component {
     players.push({
       pid: playerId,
       pname: playerName,
+      pictureId: playersArray[pindex].pictureId
     });
     console.log(pindex);
     console.log(playersArray);
@@ -156,6 +157,7 @@ class Game extends React.Component {
       players.push({
         pid: playersArray[(pindex + j) % numberOfPlayers].pid,
         pname: playersArray[(pindex + j) % numberOfPlayers].pname,
+        pictureId: playersArray[(pindex + j) % numberOfPlayers].pictureId
       });
     }
     return players;
@@ -339,6 +341,7 @@ class Game extends React.Component {
         this.winnerHandler(this.state.lastPlayer);
         updateObj["playerTurn"] = this.state.playerId;
         updateObj["winnerDecided"] = false;
+        updateObj["playerCardsFinished"] = false;
       }
       setTimeout(function () {
         db.collection("games")

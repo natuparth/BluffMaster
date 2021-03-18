@@ -96,7 +96,7 @@ export const HostGameAsync = gameData => (dispatch, getState, {getFirebase, getF
         }
       ))
      
-      dispatch(push('/startgame',{gameId: doc.id}))
+      dispatch(push('/startgame',{gameId: doc.id, pid: r}))
      
   })
 
@@ -130,7 +130,7 @@ export const JoinGameAsync = gameData => (dispatch, getState, {getFirebase, getF
         }
          ));
 
-         dispatch(push('/startgame',{gameId: gameData.gameId}))
+         dispatch(push('/startgame',{gameId: gameData.gameId, pid: r}))
         })
 
 }
