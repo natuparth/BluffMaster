@@ -341,6 +341,7 @@ class Game extends React.Component {
         this.winnerHandler(this.state.lastPlayer);
         updateObj["playerTurn"] = this.state.playerId;
         updateObj["winnerDecided"] = false;
+        updateObj["playerCardsFinished"] = false;
       }
       setTimeout(function () {
         db.collection("games")
