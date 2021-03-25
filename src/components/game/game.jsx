@@ -472,9 +472,13 @@ class Game extends React.Component {
 
     return (
       <div className="Game_container">
-        <Popup open={this.state.winnerDecided}>
-          <div> {this.getPlayerNameFromId(this.state.gameWinner)} has won the game</div>
-        </Popup>
+         <Popup open={this.state.winnerDecided}> 
+        <div className="pyro" style={{zIndex:998}} >
+      <div className="before"></div>
+        <div className="after"></div>
+      </div>
+          <div style={{zIndex:999}} >{this.getPlayerNameFromId(this.state.gameWinner)} has won the game</div>
+         </Popup>
         <PlayerLayout
           opponentCards = {this.state.opponentCards}
           players={this.state.players}
