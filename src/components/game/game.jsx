@@ -16,6 +16,7 @@ import Popup from "reactjs-popup";
 import {history} from '../../gameStore/gameStore';
 import "reactjs-popup/dist/index.css";
 import "./game.css";
+import "./crackers.css";
 import "../../selfthinker-CSS-Playing-Cards-7e0e0f2/cards.css";
 //const dispatch = useDispatch();
 const db = firebase.firestore();
