@@ -35,7 +35,7 @@ export function PlayingZone(props) {
           {elem}
           <div className="cardsNumber">{props.numberOfCards}</div>
           <div style={{transform:"translate(15em, 5em)"}}>Current Claim</div>
-          <span className="numberOfCardsLeft" style={{transform:"translate(15em, 2.9em)"}}>{cardsPlayed}</span>
+          {/* <span className="numberOfCardsLeft" style={{transform:"translate(15em, 2.9em)"}}>{cardsPlayed}</span> */}
           <div className="playCard">
           <div className="playingCards fourColours faceImages"> 
           <div className={cardClass}>

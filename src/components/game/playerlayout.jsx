@@ -1,5 +1,9 @@
 import React from "react";
+import "./playerlayout.css";
 import "./game.css";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import { faStar} from '@fortawesome/free-solid-svg-icons'
+
 
  
 export function PlayerLayout(props) {
@@ -25,40 +29,45 @@ export function PlayerLayout(props) {
        // console.log(playerCards)
        //.numberOfCards;
        var cardArray = [];
-        for(var j=0;j<5;j++)  
+        for(var j=0;j<6;j++)  
             cardArray.push( <li key={j}>
-             <div className="card back"></div>
+             <div className="cardCss back"></div>
            </li>)
+         cardArray.push(<li key={j}>
+          <div className="cardCss lastCard">{playerCards}</div>
+        </li>)   
        elem.push(
          <div className={clsName}>
-          <div>
-          <img src={require('../../assets/AVATAR/image_part_0'+avatar+'.jpg')}></img>
-            </div>
-           {/* <div
-             className="playingCards"
+           <div className="nested-grid">
+          { <div className="box-1">
+          { <img src={require('../../assets/AVATAR/image_part_0'+avatar+'.jpg')}></img> }
+            </div> }
+
+            <div
+             className={animated + " box-2"}
+           > 
+
+           <div className="nameDiv">  <span>{playerName}</span></div>
+             {/* <div className='numberOfCardsLeft'>{playerCards}</div> */}
+              <div className="lifelines">
+               
+              <FontAwesomeIcon icon={faStar} size="2x" style={{ color: '#FFDF01'}}/>
+              
+              {/* <span className="dot red"></span>
+             <span className="dot green"></span>
+             <span className="dot green"></span>
+             <span className="dot"></span>  */}
+           </div> 
+           </div>
+           { <div
+             className="playingCards box-3"
              style={{ display: "inline-block", width: "50%", float: "left" }}
            >
-             <ul className="deck" >
+             <ul className="hand hand1" style={{height: "2em"}} >
                 {cardArray}
               </ul>
-           </div> */}
+           </div> }
    
-           <div
-             className={animated}
-             style={{
-               display: "inline-block",
-               width: "45%",
-               float: "right",
-               fontFamily: "cursive",
-               textAlign: "center"
-             }}
-           >
-             <h4 style={{ margin: "2px" }}>{playerName}</h4>
-             <div className='numberOfCardsLeft'>{playerCards}</div>
-             {/* <span className="dot red"></span>
-             <span className="dot green"></span>
-             <span className="dot green"></span>
-             <span className="dot"></span> */}
            </div>
          </div>
        );
