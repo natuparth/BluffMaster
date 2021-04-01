@@ -23,6 +23,8 @@
  
   
    .playingZone{
+     display: grid;
+     grid-template-columns: 1fr 4fr 2fr;
      grid-column-start:2;
      grid-column-end: 5;
      grid-row-start: 2;
@@ -133,22 +135,30 @@
     background-color:green;
    }
    .outerRing{
+     padding-top: 1em;
+     grid-column: 2/3;
     border-radius: 50%;
-     width:30%;
-     margin-left: 25%;
-     position: relative;
-     padding-bottom: 30%;
+     
+    }
+    .currentClaim{
+      grid-column: 3/4;
+      justify-self: center;
+      align-self: center;
+      width: 100%;
+    }
+    .currentClaim .text{
+      color: white;
     }
     .outerRing:after{
       padding-bottom: 100%;
     }
-   .innerRing{border: 2px solid blue;
+   /* .innerRing{border: 2px solid blue;
       border-radius: 50%;
       width:50%;
        height: 50%;
        margin-left: 25%;
       
-      }
+      } */
 
   
    @keyframes glowing {
@@ -211,9 +221,8 @@
 }
 
 .playCard{
-  width: 2.7em;
-  height: 4.0em;
-  transform: translate(21em,3.2em);
+  margin-left: 1em;
+ 
 }
 .numberOfCardsLeft {
   grid-row: 2/3;
@@ -279,6 +288,21 @@ width: 2.5em;
   background-color: brown;
   text-align: center;
   width: 100%;
+}
+.claimBox{
+  width: 100%;
+  font-size: 2em;
+  font-weight: bold;
+}
+.claimBox .cardNumber{
+  width: 40%;
+  float: left;
+  background: #FFE77AFF;
+}
+.claimBox .claimedCard{
+  width: 60%;
+  float: left;
+  background: #7AC96A;
 }
 
 

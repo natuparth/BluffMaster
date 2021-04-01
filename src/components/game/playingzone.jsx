@@ -1,5 +1,6 @@
 import React from "react";
 import "./game.css";
+import {cardNames, cardNamesPlurals} from '../globals/globalVariables';
 
 export function PlayingZone(props) {
     var elem = [];
@@ -29,24 +30,34 @@ export function PlayingZone(props) {
     else 
       cardsPlayed = props.lastCardsNumber;
       var cardClass = "card rank-" + props.playCard + " spades" ; 
+
+      console.log(props.playCard);
     return (
       <div className="playingZone">
         <div className="outerRing">
           {elem}
+          
           <div className="cardsNumber">{props.numberOfCards}</div>
-          <div style={{transform:"translate(15em, 5em)"}}>Current Claim</div>
+          </div>
+          <div className="currentClaim">
+           <h4 className="text"> Current Claim</h4>
           {/* <span className="numberOfCardsLeft" style={{transform:"translate(15em, 2.9em)"}}>{cardsPlayed}</span> */}
           <div className="playCard">
           <div className="playingCards fourColours faceImages"> 
           <div className={cardClass}>
             <span className="rank">{props.playCard}</span>
             <span className="suit">&spades;</span>
+           </div>
           </div>
-         </div>   
-         
-               {/* <h2 style={{marginTop: "0px"}}>{props.playCard}s</h2> */}
+        </div>
+          <div className="claimBox">
+             <div className="cardNumber">
+             {cardsPlayed}
              </div>
-          
+             <div className="claimedCard">
+              {cardsPlayed>1?cardNames[props.playCard]: cardNamesPlurals[props.playCard]}
+             </div>   
+          </div>  
         </div>
       </div>
     );

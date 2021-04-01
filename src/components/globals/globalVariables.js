@@ -30,6 +30,38 @@ const ranks = {
      "k": 0,
 
   }
+
+  const cardNames ={
+    1: 'ACE',
+    2: 'TWO',
+    3: 'THREE',
+    4: 'FOUR',
+    5: 'FIVE',
+    6: 'SIX',
+    7: 'SEVEN',
+    8: 'EIGHT',
+    9: 'NINE',
+    10: 'TEN',
+    'j': 'JACK',
+    'q': 'QUEEN',
+    'k': 'KING'
+  }
+
+  const cardNamesPlurals = {
+    1: 'ACES',
+    2: 'TWOS',
+    3: 'THREES',
+    4: 'FOURS',
+    5: 'FIVES',
+    6: 'SIXES',
+    7: 'SEVENS',
+    8: 'EIGHTS',
+    9: 'NINES',
+    10: 'TEN',
+    'j': 'JACKS',
+    'q': 'QUEENS',
+    'k': 'KINGS'
+  }
  const suits = {
     1: "spades",
     2: "diams",
@@ -40,7 +72,9 @@ const ranks = {
   export {
       ranks,
       reverseRanks,
-      suits
+      suits,
+      cardNames,
+      cardNamesPlurals
   }
 
   
