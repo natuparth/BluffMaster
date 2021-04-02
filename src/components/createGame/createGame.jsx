@@ -301,6 +301,8 @@ const historyarr = history;
        var cardDist = {};
        newArray.forEach((element, index) => {
                 var name = element.pid
+                if(!element.pictureId)
+                element.pictureId='01';
                 cardDist[name] = playerCards[index].cards
                 if(element.pid === pid)
                   playerIndex = index;
