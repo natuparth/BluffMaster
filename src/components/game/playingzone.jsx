@@ -55,7 +55,7 @@ export function PlayingZone(props) {
              {cardsPlayed}
              </div>
              <div className="claimedCard">
-              {cardsPlayed>1?cardNames[props.playCard]: cardNamesPlurals[props.playCard]}
+              {cardsPlayed>1?cardNamesPlurals[props.playCard]: cardNames[props.playCard]}
              </div>   
           </div>  
         </div>

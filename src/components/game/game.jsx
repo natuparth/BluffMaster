@@ -11,6 +11,7 @@ import { CardPicker } from "./cardselector";
 import { PlayerLayout } from "./playerlayout";
 import { PlayingZone } from "./playingzone";
 import { Winners } from './winners'
+import { CardAnimation } from './cardAnimation';
 import { reverseRanks } from '../globals/globalVariables';
 import Popup from "reactjs-popup";
 import {history} from '../../gameStore/gameStore';
@@ -49,6 +50,7 @@ class Game extends React.Component {
     );
     this.playerTurn = props.playerTurn;
     this.state = {
+      showAnimation: false,
       lastCardsNumber: 0,
       opponentCards: [],
       players: this.players,
@@ -105,6 +107,7 @@ class Game extends React.Component {
       });
     }
     if (this.props.gameCards !== previousState.gameCards) {
+      console.log(this.state.lastPlayer);
       this.setState({
         lastCardsNumber: this.props.gameCards.length - previousState.gameCards.length,
         gameCards: this.props.gameCards,
@@ -114,7 +117,21 @@ class Game extends React.Component {
         lastPlayer: this.props.lastPlayer,
         playerCardsFinished: this.props.playerCardsFinished,
         opponentCards: this.getOpponentCards(this.props.firestoreinstance, this.state.players)
+      }, ()=>{
+        if(this.state.lastCardsNumber > 0 && this.state.playerId != this.props.lastPlayer){
+       
+          this.setState({
+            showAnimation: true
+          })
+          setTimeout(()=>{
+            this.setState({
+              showAnimation: false
+            })
+          },3000)
+        }
       });
+     
+      
     }
   }
 
@@ -439,8 +456,8 @@ class Game extends React.Component {
   }
   render() {
     console.log("rendered");
-    if (!this.state.myCards) return false;
-    const items = [];
+    if (!this.state.myCards) return false;    
+      const items = [];
     var i = 0;
     var myTurn = false;
     var player1Class = "player_1";
@@ -549,9 +566,17 @@ class Game extends React.Component {
           >
             <FontAwesomeIcon icon={faQuestionCircle}/> Challenge
           </AwesomeButton>
-         
+        
         </div>
-      </div>
+     
+         <CardAnimation hidden={this.state.showAnimation}
+         players={this.state.players}
+         lastPlayer={this.state.lastPlayer}
+         classMapping={this.classMapping}
+         lastCardsNumber={this.state.lastCardsNumber}
+         > </CardAnimation>
+         </div>
+      
     );
   }
 }
