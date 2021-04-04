@@ -6,6 +6,7 @@ import firebase from "../../Firebase";
 import { useDispatch } from "react-redux";
 import { HostGameAsync, JoinGameAsync } from "../../gameStore/gameSlices";
 import "./main.css";
+import Popup from 'reactjs-popup';
 
 const db = firebase.firestore();
 
@@ -19,7 +20,11 @@ function Main1() {
   const [playerName, setPlayerName] = useState("");
   const [joinModal, setJoinModal] = useState(false);
   const toggleJoin = () => setJoinModal(!joinModal);
+  const [invalidKeyPopup, setInvalidKeyPopupHandler] = useState(false);
  
+  const CloseinvalidKeyPopup = ()=>{
+    setInvalidKeyPopupHandler(false);
+  }
   return (
     <div className="mainBody">
       Welcome<br/>
@@ -133,6 +138,14 @@ function Main1() {
         </button>
  
  </div>
+ <Popup open={invalidKeyPopup} onClose={CloseinvalidKeyPopup}>
+          <div style={{backgroundColor:"grey",height:"30px",width:"500px",marginTop:"-10px",marginLeft:"-7px",marginRight:"-7px"}}></div>
+          <div className="popup_container">
+            <p className="text-center" style={{margin:"10px 10px 10px 10px"}}>Cannot join the Group, please check the game key you have entered</p>
+            </div>
+            
+            <div className="text-center"> <button onClick={CloseinvalidKeyPopup} className='btn-grad custom_button' style={{width:"3vw",height:"2vw",padding:"0px"}}>OK</button></div>
+            </Popup>
  {/* Host game container ends */} 
       </div>
 
@@ -154,7 +167,10 @@ function Main1() {
     db.collection("games")
       .where("gameKey", "==", gameKey)
       .get()
-      .then((querySnapShot) => {
+      .then((querySnapShot) => {  
+        if(querySnapShot.docs.length<=0)
+        setInvalidKeyPopupHandler(true);
+        else{
         dispatch(
           JoinGameAsync({
             gameId: querySnapShot.docs[0].id,
@@ -163,6 +179,7 @@ function Main1() {
             pname: playerName,
           })
         );
+      }
       });
   }
 }
