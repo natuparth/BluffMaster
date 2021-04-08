@@ -75,7 +75,7 @@ function Main1() {
               value={gameId}
               onChange={(event) => setGameId(event.target.value)}
             />
-            <h6 style={{color:"red",whiteSpace: "pre-wrap"}}>{gamekeyMessage?gamekeyMessage:"\n"}</h6>
+            <h6 style={{color:"red",textAlign:"left",whiteSpace: "pre-wrap"}}>{gamekeyMessage?gamekeyMessage:"\n"}</h6>
          </div>
          &nbsp;
           <div className="form__group field">
@@ -88,7 +88,7 @@ function Main1() {
               value={playerName}
               onChange={(event) => setPlayerName(event.target.value)}
             />
-         <h6 style={{color:"red",whiteSpace: "pre-wrap"}}>{playerNameMessage?playerNameMessage:"\n"}</h6>
+         <h6 style={{color:"red",textAlign:"left",whiteSpace: "pre-wrap"}}>{playerNameMessage?playerNameMessage:"\n"}</h6>
           </div>
           <button
           style={{display: 'block', margin:'auto'}}
@@ -115,7 +115,7 @@ function Main1() {
                value={gameName}
                onChange={(event) => setGameName(event.target.value)}
             />
-            <h6 style={{color:"red",whiteSpace: "pre-wrap"}}>{gameNameMessage?gameNameMessage:"\n"}</h6>
+            <h6 style={{color:"red",textAlign:"left",whiteSpace: "pre-wrap"}}>{gameNameMessage?gameNameMessage:"\n"}</h6>
           
           </div>
           &nbsp;
@@ -129,7 +129,7 @@ function Main1() {
               value={playerName}
               onChange={(event) => setPlayerName(event.target.value)}
             />
-            <h6 style={{color:"red",whiteSpace: "pre-wrap"}}>{playerNameMessage?playerNameMessage:"\n"}</h6>
+            <h6 style={{color:"red",textAlign:"left",whiteSpace: "pre-wrap"}}>{playerNameMessage?playerNameMessage:"\n"}</h6>
          
           </div>        
         <button
