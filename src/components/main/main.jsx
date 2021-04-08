@@ -21,10 +21,13 @@ function Main1() {
   const [joinModal, setJoinModal] = useState(false);
   const toggleJoin = () => setJoinModal(!joinModal);
   const [invalidKeyPopup, setInvalidKeyPopupHandler] = useState(false);
+  //const gamekeyMessage="";
+  const [gamekeyMessage, setgamekeyMessage] = useState("");
+  const [playerNameMessage, setplayerNameMessage] = useState("");
+  const [gameNameMessage, setgameNameMessage] = useState("");
+  // const [hostNameMessage, sethostNameMessage] = useState("");
+  //const playerNameMessage="";
  
-  const CloseinvalidKeyPopup = ()=>{
-    setInvalidKeyPopupHandler(false);
-  }
   return (
     <div className="mainBody">
       Welcome<br/>
@@ -62,6 +65,7 @@ function Main1() {
  {/* Join game container */}
         <div style={{display: joinGame}}>
         <div className="form__group field">
+          
             <input
               type="input"
               className="form__field"
@@ -71,6 +75,7 @@ function Main1() {
               value={gameId}
               onChange={(event) => setGameId(event.target.value)}
             />
+            <h6 style={{color:"red",whiteSpace: "pre-wrap"}}>{gamekeyMessage?gamekeyMessage:"\n"}</h6>
          </div>
          &nbsp;
           <div className="form__group field">
@@ -83,10 +88,10 @@ function Main1() {
               value={playerName}
               onChange={(event) => setPlayerName(event.target.value)}
             />
-         
+         <h6 style={{color:"red",whiteSpace: "pre-wrap"}}>{playerNameMessage?playerNameMessage:"\n"}</h6>
           </div>
           <button
-          style={{display: 'block', margin:'auto', marginTop:'3vh'}}
+          style={{display: 'block', margin:'auto'}}
           className="btn-grad custom_button"
           onClick={() => {
             joinGameHandler(gameId, playerName);
@@ -110,6 +115,7 @@ function Main1() {
                value={gameName}
                onChange={(event) => setGameName(event.target.value)}
             />
+            <h6 style={{color:"red",whiteSpace: "pre-wrap"}}>{gameNameMessage?gameNameMessage:"\n"}</h6>
           
           </div>
           &nbsp;
@@ -123,6 +129,7 @@ function Main1() {
               value={playerName}
               onChange={(event) => setPlayerName(event.target.value)}
             />
+            <h6 style={{color:"red",whiteSpace: "pre-wrap"}}>{playerNameMessage?playerNameMessage:"\n"}</h6>
          
           </div>        
         <button
@@ -138,14 +145,6 @@ function Main1() {
         </button>
  
  </div>
- <Popup open={invalidKeyPopup} onClose={CloseinvalidKeyPopup}>
-          <div style={{backgroundColor:"grey",height:"30px",width:"500px",marginTop:"-10px",marginLeft:"-7px",marginRight:"-7px"}}></div>
-          <div className="popup_container">
-            <p className="text-center" style={{margin:"10px 10px 10px 10px"}}>Cannot join the Group, please check the game key you have entered</p>
-            </div>
-            
-            <div className="text-center"> <button onClick={CloseinvalidKeyPopup} className='btn-grad custom_button' style={{width:"3vw",height:"2vw",padding:"0px"}}>OK</button></div>
-            </Popup>
  {/* Host game container ends */} 
       </div>
 
@@ -154,6 +153,17 @@ function Main1() {
   function createGameHandler(gameName) {
     let r = Math.random().toString(36).substring(7);
     console.log(r);
+    if(playerName==""){
+      setplayerNameMessage("enter valid player name");
+    }
+    else{
+      setplayerNameMessage("");
+    }
+    if(gameName==""){
+    setgameNameMessage("enter valid game key");
+    }
+    else{
+      setgameNameMessage("");
     dispatch(
       HostGameAsync({
         gameName: gameName,
@@ -162,15 +172,24 @@ function Main1() {
       })
     );
   }
+}
 
   function joinGameHandler(gameKey, playerName) {
     db.collection("games")
       .where("gameKey", "==", gameKey)
       .get()
       .then((querySnapShot) => {  
-        if(querySnapShot.docs.length<=0)
-        setInvalidKeyPopupHandler(true);
+        if(playerName==""){
+          setplayerNameMessage("enter valid player name");
+        }
         else{
+        setplayerNameMessage("");
+        }
+        if(querySnapShot.docs.length<=0 || gameKey==""){
+        setgamekeyMessage("enter valid game key");
+        }
+        else{
+          setgamekeyMessage("");
         dispatch(
           JoinGameAsync({
             gameId: querySnapShot.docs[0].id,
