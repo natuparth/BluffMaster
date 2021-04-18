@@ -106,12 +106,15 @@ class Game extends React.Component {
       }
     }
     if (this.props.playersArray !== previousState.playersArray) {
-      console.log("this checked");
+      if(this.props.playersArray.length > 1) 
       var pArray = this.createPlayersArray(
         this.props.playersArray,
         this.props.playerId,
         this.props.playerName
       );
+      else{
+        history.push("/creategame")
+      }
       this.setState({
         players: pArray,
         winnerDecided: this.props.winnerDecided,
@@ -293,7 +296,7 @@ class Game extends React.Component {
      if(self.state.players.length <= 1)
        {
          alert('game has ended')
-         history.pushState({url: 'localhost:3000' })
+         history.push("/startgame")
        }
      db.collection("games")
         .doc(self.props.gameId)
