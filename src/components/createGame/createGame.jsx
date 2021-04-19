@@ -1,6 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
-
 import { Dot } from 'react-animated-dots';
 import firebase from "../../Firebase";
 import {ranks, suits} from  "../globals/globalVariables";
@@ -15,9 +13,7 @@ import { faKey, faCameraRetro } from '@fortawesome/free-solid-svg-icons'
 import "reactjs-popup/dist/index.css";
 
 import './createGame.css';
-import { AvatarPicker } from "material-ui-avatar-picker";
-import { Button } from "bootstrap";
-import { lighten } from "@material-ui/core";
+
 
 
 const db = firebase.firestore();

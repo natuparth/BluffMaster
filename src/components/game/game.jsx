@@ -66,7 +66,7 @@ class Game extends React.Component {
       stylesArray: Array(this.props.myCards.length).fill({
         selected: false,
         styles: {
-          top: "5em",
+          top: "2em",
         },
       }),
       newMove: this.props.newMove,
@@ -76,29 +76,45 @@ class Game extends React.Component {
     };
   }
   
-
   componentDidUpdate(previousState) {
     if (this.props.myCards !== undefined) {
       if (this.props.myCards !== previousState.myCards) {
         this.setState({
           myCards: this.sortCards(this.props.myCards),
           playerTurn: this.props.playerTurn,
-          stylesArray: Array(this.props.myCards.length).fill({
-            selected: false,
-            styles: {
-              top: "5em",
-            },
-          }),
+    
+          stylesArray: Array.from({length: this.props.myCards.length}, (x,i) => {
+            if(i<35){
+              return {
+                   selected: false,
+                   styles: {
+                     top: "2em",
+                   },
+                 }
+            }
+            else
+             {
+               return {
+                selected: false,
+                styles: {
+                  top: "10em",
+                },
+              }
+             }
+          })
         });
       }
     }
     if (this.props.playersArray !== previousState.playersArray) {
-      console.log("this checked");
+      if(this.props.playersArray.length > 1) 
       var pArray = this.createPlayersArray(
         this.props.playersArray,
         this.props.playerId,
         this.props.playerName
       );
+      else{
+        history.push("/creategame")
+      }
       this.setState({
         players: pArray,
         winnerDecided: this.props.winnerDecided,
@@ -163,7 +179,7 @@ class Game extends React.Component {
       pindex = -1;
       numberOfPlayers = numberOfPlayers + 1;
     }
-    //var playerObj = this.props.playersArray[this.pindex];
+    
     players.push({
       pid: playerId,
       pname: playerName,
@@ -183,21 +199,39 @@ class Game extends React.Component {
   handleCardClick(e) {
     var newArr = this.state.stylesArray;
     if (newArr[e.currentTarget.dataset.id].selected === true) {
+      if(e.currentTarget.dataset.id<35)
       newArr[e.currentTarget.dataset.id] = {
         selected: false,
         styles: {
-          top: "5em",
+          top: "2em",
+        },
+      };
+      else
+      newArr[e.currentTarget.dataset.id] = {
+        selected: false,
+        styles: {
+          top: "10em",
         },
       };
       this.setState({
         stylesArray: newArr,
       });
     } else {
+      if(e.currentTarget.dataset.id<35)
       newArr[e.currentTarget.dataset.id] = {
         selected: true,
         styles: {
-          top: "5em",
-          transform: "translate(0px,-50px)",
+          top: "2em",
+          transform: "translate(0px,-40px)",
+        },
+      };
+      
+      else
+      newArr[e.currentTarget.dataset.id] = {
+        selected: true,
+        styles: {
+          top: "10em",
+          transform: "translate(0px,-40px)",
         },
       };
       this.setState({
@@ -262,7 +296,7 @@ class Game extends React.Component {
      if(self.state.players.length <= 1)
        {
          alert('game has ended')
-         history.pushState({url: 'localhost:3000' })
+         history.push("/startgame")
        }
      db.collection("games")
         .doc(self.props.gameId)
