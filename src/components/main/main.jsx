@@ -6,7 +6,7 @@ import firebase from "../../Firebase";
 import { useDispatch } from "react-redux";
 import { HostGameAsync, JoinGameAsync } from "../../gameStore/gameSlices";
 import "./main.css";
-import Popup from 'reactjs-popup';
+
 
 const db = firebase.firestore();
 
@@ -20,7 +20,7 @@ function Main1() {
   const [playerName, setPlayerName] = useState("");
   const [joinModal, setJoinModal] = useState(false);
   const toggleJoin = () => setJoinModal(!joinModal);
-  const [invalidKeyPopup, setInvalidKeyPopupHandler] = useState(false);
+ 
   //const gamekeyMessage="";
   const [gamekeyMessage, setgamekeyMessage] = useState("");
   const [playerNameMessage, setplayerNameMessage] = useState("");
@@ -41,6 +41,8 @@ function Main1() {
           onClick={() => {
             setJoinGame(joinGame === "none"?"block": "none");
             setHostGame("none")
+            setplayerNameMessage("")
+            setgamekeyMessage("")
            // toggleMasterButtons("none")
           //  setJoinModal(true);
             
@@ -54,6 +56,8 @@ function Main1() {
           onClick={() => {
             setHostGame(createGame === "none"?"block": "none");
             setJoinGame("none")
+            setplayerNameMessage("")
+            setgameNameMessage("")
           //  toggleMasterButtons("none")
           //  setJoinGame("none");
           }}
@@ -73,7 +77,11 @@ function Main1() {
               name="gamekey"
               required
               value={gameId}
-              onChange={(event) => setGameId(event.target.value)}
+              onChange={(event) => { 
+                setGameId(event.target.value)
+                setgamekeyMessage("");
+              }
+              }
             />
             <h6 style={{color:"red",textAlign:"left",whiteSpace: "pre-wrap"}}>{gamekeyMessage?gamekeyMessage:"\n"}</h6>
          </div>
@@ -86,7 +94,11 @@ function Main1() {
               name="playername"
               required
               value={playerName}
-              onChange={(event) => setPlayerName(event.target.value)}
+              onChange={(event) => {
+                setPlayerName(event.target.value)
+                setplayerNameMessage("");
+              }
+              }
             />
          <h6 style={{color:"red",textAlign:"left",whiteSpace: "pre-wrap"}}>{playerNameMessage?playerNameMessage:"\n"}</h6>
           </div>
@@ -113,7 +125,10 @@ function Main1() {
               name="gamename"
               required
                value={gameName}
-               onChange={(event) => setGameName(event.target.value)}
+               onChange={(event) => { 
+                             setGameName(event.target.value)
+                             setgameNameMessage("");   
+               }}
             />
             <h6 style={{color:"red",textAlign:"left",whiteSpace: "pre-wrap"}}>{gameNameMessage?gameNameMessage:"\n"}</h6>
           
@@ -127,7 +142,10 @@ function Main1() {
               name="playername"
               required
               value={playerName}
-              onChange={(event) => setPlayerName(event.target.value)}
+              onChange={(event) => {
+                setPlayerName(event.target.value)
+                setplayerNameMessage("");
+              }}
             />
             <h6 style={{color:"red",textAlign:"left",whiteSpace: "pre-wrap"}}>{playerNameMessage?playerNameMessage:"\n"}</h6>
          
@@ -155,12 +173,13 @@ function Main1() {
     console.log(r);
     if(playerName==""){
       setplayerNameMessage("enter valid player name");
+      return;
     }
     else{
       setplayerNameMessage("");
     }
     if(gameName==""){
-    setgameNameMessage("enter valid game key");
+    setgameNameMessage("enter valid game name");
     }
     else{
       setgameNameMessage("");
@@ -175,18 +194,25 @@ function Main1() {
 }
 
   function joinGameHandler(gameKey, playerName) {
+    if(gameKey == "" || gameKey.length == 0)
+    {
+      setgamekeyMessage("enter valid game key");
+      if(playerName=="")
+      setplayerNameMessage("enter valid player name");
+      return;
+    }
+    else if(playerName==""){
+      setplayerNameMessage("enter valid player name");
+      return;
+    }
+    else{
     db.collection("games")
       .where("gameKey", "==", gameKey)
       .get()
       .then((querySnapShot) => {  
-        if(playerName==""){
-          setplayerNameMessage("enter valid player name");
-        }
-        else{
-        setplayerNameMessage("");
-        }
-        if(querySnapShot.docs.length<=0 || gameKey==""){
-        setgamekeyMessage("enter valid game key");
+        if(querySnapShot.docs.length<=0 ){
+        setgamekeyMessage("Game Key is not valid");
+        return;
         }
         else{
           setgamekeyMessage("");
@@ -201,6 +227,7 @@ function Main1() {
       }
       });
   }
+}
 }
 
 export default Main1;
