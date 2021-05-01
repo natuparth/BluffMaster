@@ -183,7 +183,7 @@ class Game extends React.Component {
     players.push({
       pid: playerId,
       pname: playerName,
-      pictureId: playersArray[pindex].pictureId
+      pictureId: playersArray[pindex].pictureId || '01'
     });
     console.log(pindex);
     console.log(playersArray);
