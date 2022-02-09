@@ -35,8 +35,7 @@
    }
 
    .myControls{
-     margin-left: 10%;
-     margin-top: 15%;
+    text-align: center;
     grid-column-start: 1;
     grid-column-end: 1;
     grid-row-start: row3-start;
@@ -44,13 +43,6 @@
    
    }
   
-   .cardSelector{
-    width: 20%;
-    float: left;
-    background-color: #c4a300; 
-    transform: translate(2.2em,1.0em);
-
-   }
    .player_1{
     
     grid-column-start: 2;
@@ -306,4 +298,17 @@ width: 2.5em;
   background: #7AC96A;
 }
 
+.myCardsParentDiv{
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+.playingCards::-webkit-scrollbar{
+  display: none;
+}
+.moveControls{
+  display: flex;
+  justify-content: space-around;
+}
 

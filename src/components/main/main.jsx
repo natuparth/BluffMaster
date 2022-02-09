@@ -170,7 +170,7 @@ function Main1() {
 
   function createGameHandler(gameName) {
     let r = Math.random().toString(36).substring(7);
-    console.log(r);
+    //console.log(r);
     if(playerName==""){
       setplayerNameMessage("enter valid player name");
       return;

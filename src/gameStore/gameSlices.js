@@ -110,12 +110,12 @@ export const JoinGameAsync = gameData => (dispatch, getState, {getFirebase, getF
         pid: r
     }
     const firestore = getFirestore();
-    console.log(player);
+    //console.log(player);
     firestore.collection('games').doc(gameData.gameId).update({
      Players: firestore.FieldValue.arrayUnion(player)
     }
         ).then((doc)=>{
-            console.log(doc);
+            //console.log(doc);
            dispatch(gameActions.setGameData({
                gameName: gameData.gameName,
                gameKey: gameData.gameKey,

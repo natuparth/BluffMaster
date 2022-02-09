@@ -19,6 +19,8 @@ import "reactjs-popup/dist/index.css";
 import "./game.css";
 import "./crackers.css";
 import "../../selfthinker-CSS-Playing-Cards-7e0e0f2/cards.css";
+import {MyCards} from "./MyCards";
+import { getSuitSymbol, getClassMapping } from "../globals/helper";
 //const dispatch = useDispatch();
 const db = firebase.firestore();
 
@@ -37,7 +39,7 @@ class Game extends React.Component {
   constructor(props) {
     super(props);
     this.numberOfPlayers = this.props.playersArray.length;
-    this.classMapping = this.getClassMapping(this.numberOfPlayers);
+    this.classMapping = getClassMapping(this.numberOfPlayers);
     this.handleCardClick = this.handleCardClick.bind(this);
     this.moveHandler = this.moveHandler.bind(this);
     this.passHandler = this.passHandler.bind(this);
@@ -74,6 +76,7 @@ class Game extends React.Component {
       winnerDecided: this.props.winnerDecided,
       winners: this.props.winners
     };
+
   }
   
   componentDidUpdate(previousState) {
@@ -123,7 +126,7 @@ class Game extends React.Component {
       });
     }
     if (this.props.gameCards !== previousState.gameCards) {
-      console.log(this.state.lastPlayer);
+      //console.log(this.state.lastPlayer);
       this.setState({
         lastCardsNumber: this.props.gameCards.length - previousState.gameCards.length,
         gameCards: this.props.gameCards,
@@ -160,13 +163,13 @@ class Game extends React.Component {
     players.forEach(element => {
          opponentCards.push({pid: element.pid, numberOfCards: firestoreinstance[element.pid]?.length})
        });
-      console.log(opponentCards);
+      //console.log(opponentCards);
    return opponentCards;
   }
   createPlayersArray(playersArray, playerId, playerName) {
     var pindex;
     var players = [];
-    console.log(playersArray);
+    //console.log(playersArray);
     var numberOfPlayers = playersArray.length;
     var i;
     for (i = 0; i < numberOfPlayers; i++) {
@@ -185,8 +188,8 @@ class Game extends React.Component {
       pname: playerName,
       pictureId: playersArray[pindex].pictureId || '01'
     });
-    console.log(pindex);
-    console.log(playersArray);
+    //console.log(pindex);
+    //console.log(playersArray);
     for (var j = 1; j < numberOfPlayers; j++) {
       players.push({
         pid: playersArray[(pindex + j) % numberOfPlayers].pid,
@@ -245,11 +248,10 @@ class Game extends React.Component {
     });
   }
 
-  moveHandler(playCard) {
-    console.log("move handler");
+  moveHandler(cardsArray) {
     var tempArr = this.state.myCards;
     var updatedCards = [];
-    var stylesArray = this.state.stylesArray;
+    var stylesArray = cardsArray;
     var updatedStyles = [];
     var selectedCards = [];
     for (var i = 0; i < this.state.myCards.length; i++) {
@@ -270,7 +272,7 @@ class Game extends React.Component {
       stylesArray: updatedStyles,
     });
     var bluff = false;
-    var rank = playCard;
+    var rank = this.props.playCard;
     if (this.state.newMove === true) {
       rank = this.state.cardSelected;
     }
@@ -305,7 +307,7 @@ class Game extends React.Component {
           gameCards: firebase.firestore.FieldValue.arrayUnion(...selectedCards),
           playerTurn: self.state.players[1].pid,
           bluff: bluff,
-          rank: self.state.newMove === true ? rank : playCard,
+          rank: self.state.newMove === true ? rank : self.state.playCard,
           newMove: false,
           lastPlayer: self.state.playerId,
           playerCardsFinished: playerCardsFinished,
@@ -334,7 +336,7 @@ class Game extends React.Component {
       var passesObj = {
           ...passesMap
          };
-         console.log(self.state.players.length)
+         //console.log(self.state.players.length)
       if(passesMap[pid] === undefined && Object.keys(passesObj).length + 1 === this.state.players.length)
        {
          alert('everyone has passed. Cards will be knocked out ')
@@ -351,7 +353,7 @@ class Game extends React.Component {
        }
       }
     setTimeout(function () {
-       console.log(self.props.gameId);
+       //console.log(self.props.gameId);
       db.collection("games")
         .doc(self.props.gameId)
         .update({
@@ -359,13 +361,15 @@ class Game extends React.Component {
           winnerDecided: false,
         })
         .then((doc) => {
-          console.log(doc);
+          //console.log(doc);
         });
     }, 2000);
   }
-  challengeHandler(bluff, lastPlayer) {
+  challengeHandler() {
     var updateObj = {};
     var self = this;
+    var bluff=this.state.bluff;
+    var lastPlayer=this.state.lastPlayer;
     if (bluff === true) {
       updateObj[lastPlayer] = firebase.firestore.FieldValue.arrayUnion(
         ...this.state.gameCards
@@ -378,7 +382,7 @@ class Game extends React.Component {
         .doc(self.props.gameId)
         .update(updateObj)
         .then(() => {
-          console.log("cards updated");
+          //console.log("cards updated");
         });
     } else {
       //   var updateObj = {};
@@ -400,17 +404,17 @@ class Game extends React.Component {
           .doc(self.props.gameId)
           .update(updateObj)
           .then(() => {
-            console.log("cards updated");
+            //console.log("cards updated");
           });
       }, 5000);
     }
   }
 
   winnerHandler(winnerId) {
-    console.log(winnerId);
+    //console.log(winnerId);
     var pObj = this.state.players.filter((player) => player.pid === winnerId);
 
-    console.log(pObj[0]);
+    //console.log(pObj[0]);
     db.collection("games")
       .doc(this.props.gameId)
       .update({
@@ -421,75 +425,18 @@ class Game extends React.Component {
         playerCardsFinished: false,
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
       });
   }
-  getSuitSymbol(suit) {
-    if (suit === "spades") return <span className="suit">&spades;</span>;
-    else if (suit === "hearts") return <span className="suit">&hearts;</span>;
-    else if (suit === "diams") return <span className="suit">&diams;</span>;
-    else return <span className="suit">&clubs;</span>;
-  }
-
-  getClassMapping(numberOfPlayers) {
-    switch (numberOfPlayers) {
-      case 2:
-        return ["player_1", "player_5"];
-
-      case 3:
-        return ["player_1", "player_3", "player_7"];
-
-      case 4:
-        return ["player_1", "player_3", "player_5", "player_7"];
-
-      case 5:
-        return ["player_1", "player_2", "player_4", "player_6", "player_8"];
-
-      case 6:
-        return [
-          "player_1",
-          "player_3",
-          "player_4",
-          "player_5",
-          "player_6",
-          "player_7",
-        ];
-
-      case 7:
-        return [
-          "player_1",
-          "player_2",
-          "player_3",
-          "player_4",
-          "player_6",
-          "player_7",
-          "player_8",
-        ];
-
-      case 8:
-        return [
-          "player_1",
-          "player_2",
-          "player_3",
-          "player_4",
-          "player_5",
-          "player_6",
-          "player_7",
-          "player_8",
-        ];
-      default:
-        return [];
-    }
-  }
+  
   getPlayerNameFromId(playerId){
-    console.log(playerId)
-    console.log(this.state.winners);
+    //console.log(playerId)
+    //console.log(this.state.winners);
     if(playerId === "" || playerId === undefined || playerId === null)
      return " ";
   return  this.state.winners.filter(pobj => pobj.pid === playerId)[0].pname
   }
   render() {
-    console.log("rendered");
     if (!this.state.myCards) return false;    
       const items = [];
     var i = 0;
@@ -504,7 +451,7 @@ class Game extends React.Component {
     for (i = 0; i < this.state.myCards.length; i++) {
       var obj = this.state.myCards[i];
       var cardClass = "card rank-" + obj.rank + " " + obj.suit;
-      var elem = this.getSuitSymbol(obj.suit);
+      var elem = getSuitSymbol(obj.suit);
       items.push(
         <li
           key={i}
@@ -550,6 +497,22 @@ class Game extends React.Component {
         </Popup>
         <Winners winners = {this.state.winners}></Winners>
         <div className={player1Class}>
+         
+         <MyCards myCards={this.state.myCards} 
+         moveHandler={this.moveHandler} 
+         challengeHandler={this.challengeHandler}
+         passHandler={this.passHandler}
+         myTurn={myTurn}
+         ></MyCards>
+          {/* <div
+            className="playingCards fourColours faceImages"
+            style={{ marginLeft: "20%" }}
+          >
+            <ul className="hand">{items}</ul>
+          </div> */}
+        </div>
+        <div className="myControls">
+          <h3 style={{ margin: "2px" }}>{this.state.pname}</h3>
           <CardPicker
             playerTurn={this.state.playerTurn}
             playerId={this.props.playerId}
@@ -557,50 +520,13 @@ class Game extends React.Component {
             cardSelected={this.state.cardSelected}
             action={this.handleCardSelectClick}
           ></CardPicker>
-        
-          <div
-            className="playingCards fourColours faceImages"
-            style={{ marginLeft: "20%" }}
-          >
-            <ul className="hand">{items}</ul>
-          </div>
-        </div>
-        <div className="myControls">
-          <h3 style={{ margin: "2px" }}>{this.state.pname}</h3>
           {/* <div>
           <span className="dot red"></span>
           <span className="dot green"></span>
           <span className="dot green"></span>
           <span className="dot"></span>
         </div> */}
-          <AwesomeButton
-           type="primary"
-            onPress={() => {
-              this.moveHandler(this.props.playCard);
-            }}
-            ripple
-            disabled={!myTurn}
-          > <FontAwesomeIcon icon={faPlayCircle}/> Play</AwesomeButton>
-          <br />
-          <AwesomeButton
-            onPress={() => {
-              this.passHandler();
-            }}
-            ripple
-            disabled={!myTurn}
-          >
-          <FontAwesomeIcon icon={faArrowRight}/> Pass 
-          </AwesomeButton>
-          <br />
-          <AwesomeButton
-            onPress={() => {
-              this.challengeHandler(this.state.bluff, this.state.lastPlayer);
-            }}
-            disabled={!myTurn}
-          >
-            <FontAwesomeIcon icon={faQuestionCircle}/> Challenge
-          </AwesomeButton>
-        
+         
         </div>
      
          <CardAnimation hidden={this.state.showAnimation}
@@ -617,7 +543,7 @@ class Game extends React.Component {
 
 const mapStateToProps = (state) => {
   const pid = state.player.pid;
-  console.log(state);
+  //console.log(state);
   if(state.firestore.data.games === undefined)
    state = JSON.parse(localStorage.getItem('stateValue'));
   else
